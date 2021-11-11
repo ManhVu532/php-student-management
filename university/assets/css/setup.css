@@ -1,0 +1,88 @@
+@font-face {
+    font-family: 'Tahoma';
+    src: url('../fonts/Tahoma/Tahoma_regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Tahoma-bold';
+    src: url('../fonts/Tahoma/Tahoma_bold.ttf') format('truetype');
+}
+
+:root {
+    --red: #d30000;
+    --blue-fb: #4267B2;
+    --red-youtube: #FF0000;
+    --red-google-plus: #db4a39;
+    --screen-small: 567px;
+    --screen-medium: 768px;
+    --screen-large: 992px;
+    --screen-xlarge: 1200px;
+}
+
+iframe {
+    width: 100%;
+}
+
+body,
+hlml {
+    overflow: unset;
+    overflow-x: unset;
+    overflow-y: unset;
+}
+
+* {
+    font-family: 'Tahoma';
+    font-weight: normal;
+    font-style: normal;
+}
+
+*::-moz-selection {
+    /* Code for Firefox */
+    color: white;
+    background: var(--red);
+}
+
+.font-family-bold {
+    font-family: 'Tahoma-bold';
+}
+
+*::selection {
+    color: white;
+    background: var(--red);
+}
+
+.text-red {
+    color: var(--red);
+}
+
+.text-black {
+    color: #000;
+}
+
+.bg-red {
+    background-color: var(--red);
+}
+
+.display-5 {
+    font-size: 1.25rem;
+}
+
+.display-6 {
+    font-size: 1.125rem;
+}
+
+.border-bottom-red {
+    border-bottom: 0.5rem solid var(--red);
+}
+
+.h-5 {
+    max-height: 5rem;
+}
+
+.h-8 {
+    height: 8rem;
+}
+
+.bg-none {
+    background-color: transparent;
+}

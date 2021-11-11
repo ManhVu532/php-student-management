@@ -1,0 +1,30 @@
+<?php
+require_once("../../utils/db_helper.php");
+define('HOST', 'http://localhost:8888/student-management/');
+
+if (isset($_GET['code']) && isset($_GET['email'])) {
+    $code = $_GET['code'];
+    $to = $_GET['email'];
+
+    $date = date('Y-m-d H:i:s');
+    $currentDate = strtotime($date);
+    $futureDate = $currentDate + EXPRIED_TIME;
+    $expriedAt = date("Y-m-d H:i:s", $futureDate);
+
+    $sql = "UPDATE user_tbl SET verifyCode = '$code', expriedAt = '$expriedAt' WHERE email = '$to'";
+
+    executeQuery($sql);
+
+    $resetPasswordPath = HOST . "pages/auth/reset-password.php?code=$code&email=$to";
+
+    $subject = 'Lấy lại mật khẩu [' . $code . ']';
+    $message = "Bạn cần lấy lại mật khẩu củ mình?\nHãy sử dụng mã code bí mật dưới đây!\n"
+        . $resetPasswordPath .
+        "   (Mã có hiệu lực trong 5 phút)\n\nNếu bạn không quên mật khẩu của mình, bạn có thể bỏ qua email này.";
+    $headers = 'From: manhvvdev.app@gmail.com';
+
+
+    mail($to, $subject, $message, $headers);
+
+    echo json_encode(array('status' => 'success', 'message' => "Gửi thành công"));
+}
