@@ -1,9 +1,10 @@
 <?php
 require_once("../../../utils/db_helper.php");
+require_once("../../../utils/utils.php");
 if (!empty($_GET)) {
     if ($_GET['q']) {
         $q = $_GET['q'];
-        $q = trim($q);
+        $q = validate_data($q);
         $sql = "SELECT * FROM user_tbl WHERE (`id` LIKE '%$q%' OR `firstName` LIKE '%$q%' OR `lastName` LIKE '%$q%' OR `email` LIKE '%$q%' OR `phoneNumber` LIKE '%$q%' OR `address` LIKE '%$q%') AND `type` = 0 ORDER BY createAt DESC;";
         $result = executeResult($sql);
         if (count($result) > 0) {

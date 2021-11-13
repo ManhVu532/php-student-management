@@ -146,13 +146,13 @@ $pathSidebar = 'students';
                                                 echo "<td>" . $user['phoneNumber'] . "</td>";
                                                 echo '<td>
                                                         <div class="text-nowrap">
-                                                            <button title="Đặt lại mật khẩu" class = "btn btn-primary rounded-circle mx-2" style = "min-height: 46px" onclick="resetPassword(' . $id . ')">
+                                                            <button title="Đặt lại mật khẩu" data-id="' . $user['id'] . '" class = "btn btn-primary rounded-circle mx-2 btn-reset" style = "min-height: 46px">
                                                                 <i class="fas fa-lock mx-1"></i>
                                                             </button>
                                                             <a href="form.php?id=' . $user["id"] . '" target="_blank" title="Sửa sinh viên" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
                                                                 <i class="fas fa-user-edit"></i>
                                                             </a>
-                                                            <button title="Xóa sinh viên" class = "btn btn-danger rounded-circle mx-2" style = "min-height: 46px" onclick="deleteStudent(' . $id . ')">
+                                                            <button title="Xóa sinh viên" data-id="' . $user['id'] . '" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
                                                                 <i class="fas fa-user-minus"></i>
                                                             </button>
                                                         </div>
@@ -161,7 +161,7 @@ $pathSidebar = 'students';
                                             }
 
                                             if (count($listUser) == 0) {
-                                                echo "<tr><td colspan='5' class='text-center'>Không có dữ liệu hoặc không có sinh viên nào sắp tới ngày sinh nhật</td></tr>";
+                                                echo "<tr><td colspan='10' class='text-center'>Không có dữ liệu hoặc không có sinh viên nào</td></tr>";
                                             }
                                             ?>
                                         </tbody>
@@ -310,6 +310,16 @@ $pathSidebar = 'students';
                     },
                 }]
             }).buttons().container().appendTo('.header-student_tbl');
+
+            var table = $('#student_tbl').DataTable();
+            $('#subject_tbl tbody').on('click', 'button.btn-delete', function() {
+                let id = this.dataset.id;
+                deleteStudent(id, table.row($(this).parents('tr')));
+            });
+            $('#subject_tbl tbody').on('click', 'button.btn-reset', function() {
+                let id = this.dataset.id;
+                resetPassword(id);
+            });
         });
 
 
@@ -325,40 +335,35 @@ $pathSidebar = 'students';
                 },
                 success: function(data) {
                     if (data.status == 'success') {
+                        var table = $('#student_tbl').DataTable();
+                        table.clear().draw();
                         if (data.data.length > 0) {
-                            let list = "";
-                            list = data.data.map((item, index) => {
+                            data.data.map((item, index) => {
                                 let date = moment(item.dob, 'YYYY-MM-DD hh:mm:ss');
-                                return `<tr>
-                                            <td>${index+1}</td>
-                                            <td>${item.id}</td>
-                                            <td>${item.lastName + " " + item.firstName}</td>
-                                            <td>${item.classId}</td>
-                                            <td>${date.format('DD/MM/YYYY') != 'Invalid date' ? date.format('DD/MM/YYYY') : ''}</td>
-                                            <td>${item.gender ?? ''}</td>
-                                            <td>${item.address ?? ''}</td>
-                                            <td>${item.email ?? ''}</td>
-                                            <td>${item.phoneNumber ?? ''}</td>
-                                            <td>
-                                                <div class="text-nowrap">
-                                                    <button title="Đặt lại mật khẩu" class = "btn btn-primary rounded-circle mx-2" style = "min-height: 46px" onclick="resetPassword("${item.id}")">
-                                                        <i class="fas fa-lock mx-1"></i>
-                                                    </button>
-                                                    <a href='form.php?id=${item.id}' target='_blank' title='Sửa sinh viên' class = 'btn btn-warning rounded-circle mx-2' style = 'height: 46px; padding-top: 10px'>
-                                                        <i class='fas fa-user-edit'></i>
-                                                    </a>
-                                                    <button title='Xóa sinh viên' class = 'btn btn-danger rounded-circle mx-2' onclick='deleteStudent("${item.id}")' style = 'min-height: 46px'>
-                                                        <i class='fas fa-user-minus'></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>`
+                                let subject = [index + 1,
+                                    item.id, item.lastName + " " + item.firstName,
+                                    item.classId,
+                                    date.format('DD/MM/YYYY') != 'Invalid date' ? date.format('DD/MM/YYYY') : '',
+                                    item.gender ?? '',
+                                    item.address ?? '',
+                                    item.email ?? '',
+                                    item.phoneNumber ?? '',
+                                    `
+                                    <div class="text-nowrap">
+                                        <button title="Đặt lại mật khẩu" data-id="${item.id}" class = "btn btn-primary rounded-circle mx-2 btn-reset" style = "min-height: 46px">
+                                            <i class="fas fa-lock mx-1"></i>
+                                        </button>
+                                        <a href="form.php?id=${item.id}" target="_blank" title="Sửa sinh viên" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
+                                            <i class="fas fa-user-edit"></i>
+                                        </a>
+                                        <button title="Xóa sinh viên" data-id="${item.id}" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
+                                            <i class="fas fa-user-minus"></i>
+                                        </button>
+                                    </div>
+                                `
+                                ];
+                                table.row.add(subject).draw();
                             });
-                            $("#tbl_body").html(list.join(""));
-                        } else {
-                            $("#tbl_body").html(
-                                `<tr class="odd"><td valign="top" colspan="10" class="dataTables_empty">Không có dữ liệu</td></tr>`
-                            );
                         }
                     } else {
                         Swal.fire({
@@ -437,7 +442,7 @@ $pathSidebar = 'students';
             })
         }
 
-        function deleteStudent(id) {
+        function deleteStudent(id, row) {
             if (!id) return;
             Swal.fire({
                 title: `Bạn có chắc chắn muốn xóa sinh viên ${id}?`,
@@ -482,7 +487,7 @@ $pathSidebar = 'students';
                                             icon: 'success',
                                             confirmButtonText: 'OK'
                                         }).then(() => {
-                                            location.reload();
+                                            row.remove().draw();
                                         });
                                     } else {
                                         Swal.fire({
