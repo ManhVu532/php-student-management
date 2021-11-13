@@ -14,7 +14,7 @@ if (isset($_SESSION['user'])) {
 } else {
   header("Location: ../auth/login.php");
 }
-$path = 'dashboard';
+$pathSidebar = 'dashboard';
 ?>
 
 <!DOCTYPE html>
@@ -74,7 +74,15 @@ $path = 'dashboard';
               <!-- small box -->
               <div class="small-box elevation-1 bg-info">
                 <div class="inner">
-                  <h3>150</h3>
+                  <?php
+                  $sql = "SELECT COUNT(id) AS total FROM user_tbl";
+                  $result = executeResult($sql);
+                  $total = 0;
+                  if (count($result) > 0) {
+                    $total = $result[0]['total'];
+                  }
+                  echo '<h3>' . $total . '</h3>';
+                  ?>
 
                   <p>Sinh viên</p>
                 </div>
@@ -89,7 +97,15 @@ $path = 'dashboard';
               <!-- small box -->
               <div class="small-box elevation-1 bg-success">
                 <div class="inner">
-                  <h3>53</h3>
+                  <?php
+                  $sql = "SELECT COUNT(id) AS total FROM subject_tbl";
+                  $result = executeResult($sql);
+                  $total = 0;
+                  if (count($result) > 0) {
+                    $total = $result[0]['total'];
+                  }
+                  echo '<h3>' . $total . '</h3>';
+                  ?>
 
                   <p>Môn học</p>
                 </div>
@@ -104,7 +120,15 @@ $path = 'dashboard';
               <!-- small box -->
               <div class="small-box elevation-1 bg-warning">
                 <div class="inner">
-                  <h3>44</h3>
+                  <?php
+                  $sql = "SELECT COUNT(*) AS total FROM register_subject";
+                  $result = executeResult($sql);
+                  $total = 0;
+                  if (count($result) > 0) {
+                    $total = $result[0]['total'];
+                  }
+                  echo '<h3>' . $total . '</h3>';
+                  ?>
 
                   <p>Kết quả điểm</p>
                 </div>
@@ -119,7 +143,15 @@ $path = 'dashboard';
               <!-- small box -->
               <div class="small-box elevation-1 bg-danger">
                 <div class="inner">
-                  <h3>65</h3>
+                  <?php
+                  $sql = "SELECT COUNT(id) AS total FROM subject_semester";
+                  $result = executeResult($sql);
+                  $total = 0;
+                  if (count($result) > 0) {
+                    $total = $result[0]['total'];
+                  }
+                  echo '<h3>' . $total . '</h3>';
+                  ?>
 
                   <p>Lịch thi</p>
                 </div>
@@ -150,35 +182,40 @@ $path = 'dashboard';
                   <div class="header-user_tbl mb-3"></div>
                   <table id="user_tbl" class="w-100 table table-bordered table-striped">
                     <thead>
-                      <tr>
+                      <tr class="bg-dark">
+                        <th>STT</th>
                         <th>Mã sinh viên</th>
                         <th>Họ và tên</th>
                         <th>Ngày sinh</th>
-                        <th>Lớp</th>
                         <th>Thao tác</th>
                       </tr>
                     </thead>
                     <tbody id="tbl_body">
                       <?php
-                      $query = 'SELECT * FROM user_tbl WHERE DATE_ADD(dob, INTERVAL YEAR(CURDATE())-YEAR(dob) + IF(DAYOFYEAR(CURDATE()) > DAYOFYEAR(dob),1,0) YEAR) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 180 DAY);';
+                      $query = 'SELECT * FROM user_tbl WHERE DATE_ADD(dob, INTERVAL YEAR(CURDATE())-YEAR(dob) + IF(DAY(CURDATE()) > DAY(dob),1,0) YEAR) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY) AND `type` = 0 ORDER BY  MONTH(dob), DAY(dob) ASC;';
                       $listUser = executeResult($query);
+                      $index = 0;
                       foreach ($listUser as $user) {
+                        $index++;
                         $dob = $user['dob'];
                         $date_format = 'Không có';
+                        $action = "Gửi mail";
+                        $disabled = $user['email'] ? "" : "disabled";
                         if ($dob) {
                           $date = $dob;
                           $date_format = DateTime::createFromFormat("Y-m-d H:i:s",  $date);
                           $date_format = $date_format->format("d/m/Y");
                         }
-                        echo "<tr><td>" . $user['id'] . "</td>";
+                        echo "<tr>";
+                        echo "<td>" . $index . "</td>";
+                        echo "<td>" . $user['id'] . "</td>";
                         echo "<td>" . $user['lastName'] . ' ' . $user['firstName'] . "</td>";
                         echo "<td>" . $date_format . "</td>";
-                        echo "<td>" . $user['classId'] . "</td>";
                         echo "<td>
-                                <a href='' class = 'btn btn-outline-success mx-2'>
+                                <button class = 'btn btn-outline-success mx-2' " . $disabled . ">
                                   <i class='fas fa-envelope'></i>
-                                  Gửi email
-                                </a>
+                                    " . $action . "
+                                </button>
                               </td>";
                         echo "</tr>";
                       }
@@ -190,10 +227,10 @@ $path = 'dashboard';
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th>Id</th>
-                        <th>Người dùng</th>
-                        <th>Tuổi</th>
-                        <th>Email</th>
+                        <th>STT</th>
+                        <th>Mã sinh viên</th>
+                        <th>Họ và tên</th>
+                        <th>Ngày sinh</th>
                         <th>Thao tác</th>
                       </tr>
                     </tfoot>
@@ -232,12 +269,6 @@ $path = 'dashboard';
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <!-- <footer class="main-footer">
-            <div class="float-right d-none d-sm-block">
-                <b>Version</b> 3.2.0-rc
-            </div>
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-        </footer> -->
 
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
@@ -357,33 +388,117 @@ $path = 'dashboard';
       }).buttons().container().appendTo('.header-user_tbl');
     });
 
+    let cntt = attt = dpt = dt = vt = mr = kt = other = 0;
 
-    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
-    var donutData = {
-      labels: [
-        'CNTT',
-        'ĐPT',
-        'ĐT',
-        'VT',
-        'Marketing',
-        'Fintech',
-      ],
-      datasets: [{
-        data: [700, 500, 400, 600, 300, 100],
-        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
-      }]
+    function getCountUsers() {
+      $.when(
+        $.ajax({
+          url: 'count_major.php?major=CN',
+          type: 'GET',
+          success: function(data) {
+            console.log("response: ", data);
+            data = JSON.parse(data);
+            cntt = data.data;
+          }
+        }),
+
+        $.ajax({
+          url: 'count_major.php?major=PT',
+          type: 'GET',
+          success: function(data) {
+            data = JSON.parse(data);
+            dpt = data.data;
+          }
+        }),
+
+        $.ajax({
+          url: 'count_major.php?major=DT',
+          type: 'GET',
+          success: function(data) {
+            data = JSON.parse(data);
+            dt = data.data;
+          }
+        }),
+
+        $.ajax({
+          url: 'count_major.php?major=VT',
+          type: 'GET',
+          success: function(data) {
+            data = JSON.parse(data);
+            vt = data.data;
+          }
+        }),
+
+        $.ajax({
+          url: 'count_major.php?major=MR',
+          type: 'GET',
+          success: function(data) {
+            data = JSON.parse(data);
+            mr = data.data;
+          }
+        }),
+        $.ajax({
+          url: 'count_major.php?major=KT',
+          type: 'GET',
+          success: function(data) {
+            data = JSON.parse(data);
+            kt = data.data;
+          }
+        }),
+
+        $.ajax({
+          url: 'count_major.php?major=other',
+          type: 'GET',
+          success: function(data) {
+            data = JSON.parse(data);
+            other = data.data;
+          }
+        }),
+
+        $.ajax({
+          url: 'count_major.php?major=AT',
+          type: 'GET',
+          success: function(data) {
+            data = JSON.parse(data);
+            attt = data.data;
+          }
+        })
+      ).then(function() {
+        drawChart();
+      });
     }
-    var donutOptions = {
-      maintainAspectRatio: false,
-      responsive: true,
+    getCountUsers();
+
+    function drawChart() {
+      var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+      var donutData = {
+        labels: [
+          'CNTT',
+          'ATTT',
+          'ĐPT',
+          'ĐT',
+          'VT',
+          'Marketing',
+          'KT',
+          'khác'
+        ],
+        datasets: [{
+          data: [cntt, attt,dpt, dt, vt, mr, kt, other],
+          backgroundColor: ['#f56954', '#C85C5C', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#113CFC', '#d2d6de'],
+        }]
+      }
+      var donutOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+      }
+      //Create pie or douhnut chart
+      // You can switch between pie and douhnut using the method below.
+      new Chart(donutChartCanvas, {
+        type: 'doughnut',
+        data: donutData,
+        options: donutOptions
+      })
     }
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    new Chart(donutChartCanvas, {
-      type: 'doughnut',
-      data: donutData,
-      options: donutOptions
-    })
   </script>
 </body>
 

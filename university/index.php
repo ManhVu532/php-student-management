@@ -1,3 +1,8 @@
+<?php
+    require_once("../utils/db_helper.php");
+    define('HOST', 'http://localhost:8888/student-management/');
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -66,7 +71,7 @@
                 <div class="position-relative py-1 d-flex justify-content-between flex-grow-1">
                     <ul class="navbar-nav d-flex justify-content-between">
                         <li class="nav-item active">
-                            <a class="nav-link text-white mx-1 py-2 px-4 rounded text-center" href="index.html">Trang chủ <span class="sr-only">(current)</span></a>
+                            <a class="nav-link text-white mx-1 py-2 px-4 rounded text-center" href="index.php">Trang chủ <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white py-2 px-4 rounded text-center mx-1" href="./pages/introductions/index.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -248,7 +253,7 @@
                                 <img src="assets/images/multimedia.png" alt="multimedia" />
                             </div>
                             <a href="#" class="text-decoration-none">
-                                <p class="text-center">Đa phươn tiện</p>
+                                <p class="text-center">Đa phương tiện</p>
                             </a>
                         </div>
                     </div>
@@ -286,45 +291,43 @@
         <section class="lecturers mt-4">
             <div class="container">
                 <h3 class="heading font-family-bold" data-aos="fade-up">
-                    Giảng viên
+                    Sinh viên tiêu biểu
                     <div class="line line--red mt-1 line--w-8"></div>
                 </h3>
                 <div class="row mt-4" data-aos="fade-up">
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
-                        <div class="lecturers__card bg-white d-flex flex-column align-items-center rounded-lg shadow-sm p-3 pt-5">
-                            <a href="#" class="card-220 card-lg-220 card-md-160 rounded-circle overflow-hidden bg-light">
-                                <img src="assets/images/Hà Thị Hồng Ngân.jpg" class="card-img-top" alt="...">
-                            </a>
-                            <div class="mt-3">
-                                <h6 class="text-center mb-0 font-family-bold">Hà Thị Hồng Ngân</h6>
-                                <p class="text-center text-black-50 text-desc mb-0">Giảng viên Khoa đa phương tiện</p>
-                            </div>
-                        </div>
-                    </div>
+                    <?php
+                        $sql = "SELECT * FROM `user_tbl` WHERE `type` = 0 AND `isActive` = 1 LIMIT 3";
+                        $users = executeResult($sql);
 
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
-                        <div class="lecturers__card bg-white d-flex flex-column align-items-center rounded-lg shadow-sm p-3 pt-5">
-                            <a href="#" class="card-220 card-lg-220 card-md-160 rounded-circle overflow-hidden bg-light">
-                                <img src="assets/images/Hoàng Thúy Quỳnh.png" class="card-img-top" alt="...">
-                            </a>
-                            <div class="mt-3">
-                                <h6 class="text-center mb-0 font-family-bold">Hoàng Thúy Quỳnh</h6>
-                                <p class="text-center text-black-50 text-desc mb-0">Giảng viên Khoa công nghệ thông tin</p>
-                            </div>
-                        </div>
-                    </div>
+                        if(count($users) == 0){
+                            echo '<h3 class="text-center">Không tìm thấy thông tin sinh viên nào</h3>';
+                        }else{
+                            foreach($users as $user){
+                                $user_name = $user['lastName']." ".$user['firstName'];
+                                $user_avatar = $user['avatar'];
+                                if(empty($user_avatar) || !$user_avatar){
+                                    $user_avatar = HOST.'university/assets/images/avatar.jpeg';
+                                }else{
+                                    $user_avatar = HOST.$user_avatar;
+                                }
+                                $user_id = $user['id'];
 
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-                        <div class="lecturers__card bg-white d-flex flex-column align-items-center rounded-lg shadow-sm p-3 pt-5">
-                            <a href="#" class="card-220 card-lg-220 card-md-160 rounded-circle overflow-hidden bg-light">
-                                <img src="assets/images/Trần Quốc Trung.jpg" class="card-img-top" alt="...">
-                            </a>
-                            <div class="mt-3">
-                                <h6 class="text-center mb-0 font-family-bold">Trần Quốc Trung</h6>
-                                <p class="text-center text-black-50 text-desc mb-0">Giảng viên Khoa đa phương tiện</p>
-                            </div>
-                        </div>
-                    </div>
+                                echo '
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                                            <div class="lecturers__card bg-white d-flex flex-column align-items-center rounded-lg shadow-sm p-3 pt-5">
+                                                <a href="#" class="card-220 card-lg-220 card-md-160 rounded-circle overflow-hidden bg-light">
+                                                    <img src="'.$user_avatar.'" class="card-img-top" alt="...">
+                                                </a>
+                                                <div class="mt-3">
+                                                    <h6 class="text-center mb-0 font-family-bold">'.$user_name.'</h6>
+                                                    <p class="text-center text-black-50 text-desc mb-0">'.$user_id.'</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                ';
+                             }
+                        }
+                    ?>
                 </div>
             </div>
         </section>

@@ -39,7 +39,7 @@
                 echo json_encode(array('status' => 'error', 'message' => 'Mật khẩu không chính xác'));
             }else{
                 $_SESSION['user'] = json_encode($user);
-                if($remember === 'true'){
+                if($remember == 'true' || $remember == true){
                     setcookie('user', json_encode(array('username' => $username, 'password' => $password, 'remember' => $remember)), time() + EXPRIED_TIME_COOKIE);
                 }else{
                     if (isset($_COOKIE['user'])) {

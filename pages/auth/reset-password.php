@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_SESSION['user']) || isset($_COOKIE['user'])) {
+if (isset($_SESSION['user'])) {
     header('Location: ../404.php');
 }
 require_once("../../utils/db_helper.php");

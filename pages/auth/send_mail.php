@@ -18,9 +18,9 @@ if (isset($_GET['code']) && isset($_GET['email'])) {
     $resetPasswordPath = HOST . "pages/auth/reset-password.php?code=$code&email=$to";
 
     $subject = 'Lấy lại mật khẩu [' . $code . ']';
-    $message = "Bạn cần lấy lại mật khẩu củ mình?\nHãy sử dụng mã code bí mật dưới đây!\n"
+    $message = "Bạn cần lấy lại mật khẩu của mình?\nHãy sử dụng liên kết khôi phục mật khẩu dưới đây!\n"
         . $resetPasswordPath .
-        "   (Mã có hiệu lực trong 5 phút)\n\nNếu bạn không quên mật khẩu của mình, bạn có thể bỏ qua email này.";
+        "   (Liên kết có hiệu lực trong 5 phút)\n\nNếu bạn không quên mật khẩu của mình, bạn có thể bỏ qua email này.";
     $headers = 'From: manhvvdev.app@gmail.com';
 
 

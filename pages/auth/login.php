@@ -12,11 +12,11 @@ if (isset($_COOKIE['user'])) {
     $remember = $user['remember'];
 }
 if (isset($_SESSION['user'])) {
-    if($_SESSION['user']){
+    if ($_SESSION['user']) {
         $user = json_decode($_SESSION['user'], true);
-        if($user['type'] == 1){
+        if ($user['type'] == 1) {
             header('Location: ../admin/index.php');
-        }else if($user['type'] == 0){
+        } else if ($user['type'] == 0) {
             header('Location: ../../index.php');
         }
     }
@@ -123,8 +123,6 @@ if (isset($_SESSION['user'])) {
             var password = $("input[name='password']").val();
             var remember = $("input[name='remember']").is(":checked");
 
-            console.log("remember: ", remember);
-
             $.ajax({
                 url: "login_validation.php",
                 type: "POST",
@@ -137,16 +135,10 @@ if (isset($_SESSION['user'])) {
                     console.log(data);
                     data = JSON.parse(data);
                     if (data.status == "success") {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Đăng nhập thành công',
-                            text: data.message,
-                        }).then(() => {
-                            if (data.user.type == 1)
-                                window.location.href = "../admin/index.php";
-                            else if (data.user.type == 0)
-                                window.location.href = "../../index.php";
-                        });
+                        if (data.user.type == 1)
+                            window.location.href = "../admin/index.php";
+                        else if (data.user.type == 0)
+                            window.location.href = "../../index.php";
                     } else {
                         Swal.fire({
                             icon: 'error',
