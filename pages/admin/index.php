@@ -121,7 +121,8 @@ $pathSidebar = 'dashboard';
               <div class="small-box elevation-1 bg-warning">
                 <div class="inner">
                   <?php
-                  $sql = "SELECT COUNT(*) AS total FROM register_subject";
+                  $sql = "SELECT COUNT(userId) AS total FROM register_subject
+                  WHERE pointCC != 0 OR pointTH !=0 OR pointKT != 0 OR pointExam != 0 OR pointBT != 0;";
                   $result = executeResult($sql);
                   $total = 0;
                   if (count($result) > 0) {
@@ -144,7 +145,7 @@ $pathSidebar = 'dashboard';
               <div class="small-box elevation-1 bg-danger">
                 <div class="inner">
                   <?php
-                  $sql = "SELECT COUNT(id) AS total FROM subject_semester";
+                  $sql = "SELECT COUNT(*) AS total FROM subject_semester WHERE examAt IS NOT NULL AND examAt > 0;";
                   $result = executeResult($sql);
                   $total = 0;
                   if (count($result) > 0) {
