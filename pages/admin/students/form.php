@@ -352,7 +352,7 @@ if (isset($_GET['id'])) {
                 error.id = 'ID không được để trống';
                 return;
             }
-            if (id.length == 20) {
+            if (id.length >= 20) {
                 $("#id-validate").removeClass('d-none');
                 $("#id-validate").addClass('d-block');
                 $("#id-validate").html('ID không được để quá 20 ký tự');
@@ -517,7 +517,6 @@ if (isset($_GET['id'])) {
                     }
                 })
             } else {
-                console.log("creating...");
                 $.ajax({
                     url: 'create.php',
                     method: 'POST',
