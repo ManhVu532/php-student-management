@@ -309,7 +309,7 @@ $pathSidebar = 'subjects-educate';
                         if (data.data.length > 0) {
                             let list = "";
                             table.clear().draw();
-                            console.log("list: ", data.data);
+
                             list = data.data.map((item, index) => {
                                 let subject = [index + 1, item.id, item.name, item.numberOfCredits, item.numberOfLessons, `
                                 <div class="text-nowrap">
@@ -379,8 +379,16 @@ $pathSidebar = 'subjects-educate';
                                     'id': id,
                                     'password': password
                                 },
+                                beforeSend: function() {
+                                    Swal.fire({
+                                        title: 'Đang xóa...',
+                                        icon: 'info',
+                                        onOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+                                },
                                 success: function(data) {
-                                    console.log("res: ", data);
                                     if (data.status == 'success') {
                                         Swal.fire({
                                             title: 'Xóa thành công!',
