@@ -1,11 +1,10 @@
   <?php
-  define('HOST', 'http://localhost:8888/student-management/');
   $type = -1;
   if (isset($user)) {
     $type = $user['type'];
   }
   $path = "#";
-  $contactPath = HOST."university/pages/contact.html";
+  $contactPath = HOST."university/pages/contact.php";
   if ($type == 0) {
     $path = HOST . 'index.php';
   } else if ($type == 1) {

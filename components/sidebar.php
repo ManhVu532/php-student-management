@@ -30,14 +30,16 @@ if (!isset($pathSidebar)) $pathSidebar = 'dashboard';
   <!-- Sidebar -->
   <div class="sidebar">
     <!-- Sidebar user (optional) -->
-    <div class="user-panel mt-3 py-2 mb-3 d-flex <?= $pathSidebar == 'profile-admin' ? 'active' : '' ?>">
-      <div class="bg-light image d-flex justify-content-center ml-3 align-items-center p-0 img-circle elevation-2 overflow-hidden" style="max-width: 32px; min-width:32px; height: 32px;">
-        <img src="<?= $avatar ? HOST . $avatar : HOST . 'assets/images/admin.png' ?>" style="width: auto" class="h-100" alt="User Image">
+    <a href="<?= HOST . "pages/admin/profile/index.php" ?>">
+      <div class="user-panel mt-3 py-2 mb-3 d-flex <?= $pathSidebar == 'profile-admin' ? 'active' : '' ?>">
+        <div class="bg-light image d-flex justify-content-center ml-3 align-items-center p-0 img-circle elevation-2 overflow-hidden" style="max-width: 32px; min-width:32px; height: 32px;">
+          <img src="<?= $avatar ? HOST . $avatar : HOST . 'assets/images/admin.png' ?>" style="width: auto" class="h-100" alt="User Image">
+        </div>
+        <div class="info d-flex align-items-center">
+          <a href="<?= HOST . "pages/admin/profile/index.php" ?>" class="d-block"><?= empty($firstName) ? 'admin' : $firstName ?></a>
+        </div>
       </div>
-      <div class="info d-flex align-items-center">
-        <a href="<?= HOST . "pages/admin/profile/index.php" ?>" class="d-block"><?= empty($firstName) ? 'admin' : $firstName ?></a>
-      </div>
-    </div>
+    </a>
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
@@ -70,7 +72,7 @@ if (!isset($pathSidebar)) $pathSidebar = 'dashboard';
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?= HOST . "pages/admin/subjects/semesters/index.php" ?>" class="nav-link <?= str_contains($pathSidebar, 'semester') ? "active" : "" ?>">
+              <a href="<?= HOST . "pages/admin/subjects/semesters/index.php" ?>" class="nav-link <?= str_contains($pathSidebar, '-semester') ? "active" : "" ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Môn học theo học kỳ</p>
               </a>
@@ -84,15 +86,15 @@ if (!isset($pathSidebar)) $pathSidebar = 'dashboard';
           </ul>
         </li>
         <li class="nav-item">
-          <a href="<?= HOST . "pages/admin/semesters/index.php" ?>" class="nav-link">
+          <a href="<?= HOST . "pages/admin/semesters/index.php" ?>" class="nav-link <?= str_contains($pathSidebar, 'semesters') ? "active" : "" ?>">
             <i class="fas fa-university nav-icon"></i>
             <p>
-              Kỳ học
+              Học kỳ
             </p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="<?= HOST . "pages/admin/scores/index.php" ?>" class="nav-link">
+          <a href="<?= HOST . "pages/admin/scores/index.php" ?>" class="nav-link <?= str_contains($pathSidebar, 'scores') ? "active" : "" ?>">
             <i class="nav-icon fas fa-graduation-cap"></i>
             <p>
               Điểm

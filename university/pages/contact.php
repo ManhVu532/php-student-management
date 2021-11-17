@@ -1,3 +1,6 @@
+<?php
+    require_once("../../utils/config.php");
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -109,6 +112,9 @@
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link text-white py-2 px-4  mx-1 rounded text-center" href="../pages/contact.html">Liên hệ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white py-2 px-4  mx-1 rounded text-center" href="<?=HOST."pages/auth/login.php"?>">Đăng nhập</a>
                         </li>
                     </ul>
                     <a class="search py-2 px-3 rounded" href="#">
