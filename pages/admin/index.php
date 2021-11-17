@@ -213,7 +213,7 @@ $pathSidebar = 'dashboard';
                         echo "<td>" . $user['lastName'] . ' ' . $user['firstName'] . "</td>";
                         echo "<td>" . $date_format . "</td>";
                         echo "<td>
-                                <button class = 'btn btn-outline-success mx-2' " . $disabled . ">
+                                <button data-firstname='".$user['firstName']."' data-email='".$user['email']."' class ='btn btn-outline-success mx-2 btn-sendmail' " . $disabled . ">
                                   <i class='fas fa-envelope'></i>
                                     " . $action . "
                                 </button>
@@ -307,7 +307,7 @@ $pathSidebar = 'dashboard';
     $(function() {
       $("#user_tbl").DataTable({
         "responsive": true,
-        "searching": false,
+        "searching": true,
         "lengthChange": true,
         "language": {
           "info": "Hiển thị _START_ / _END_ của _TOTAL_ bản ghi",
@@ -323,7 +323,11 @@ $pathSidebar = 'dashboard';
             "next": "Sau",
             "previous": "Trước"
           },
-          "emptyTable": "Không có dữ liệu"
+          "emptyTable": "Không có dữ liệu",
+          "search": "Tìm kiếm:",
+          "sZeroRecords": "Không tìm thấy dữ liệu khớp",
+          "sInfoFiltered": "(Tìm kiếm trong _MAX_ tổng số bản ghi)",
+          "sInfoEmpty": "Hiển thị 0 đến 0 của 0 bản ghi"
         },
         code: "utf-8",
         "buttons": [{
@@ -387,6 +391,12 @@ $pathSidebar = 'dashboard';
           },
         }]
       }).buttons().container().appendTo('.header-user_tbl');
+      var table = $('#user_tbl').DataTable();
+      $('#user_tbl tbody').on('click', 'button.btn-sendmail', function() {
+        let email = this.dataset.email;
+        let firstname = this.dataset.firstname;
+        sendmailBirthday(email, firstname);
+      });
     });
 
     let cntt = attt = dpt = dt = vt = mr = kt = other = 0;
@@ -484,7 +494,7 @@ $pathSidebar = 'dashboard';
           'khác'
         ],
         datasets: [{
-          data: [cntt, attt,dpt, dt, vt, mr, kt, other],
+          data: [cntt, attt, dpt, dt, vt, mr, kt, other],
           backgroundColor: ['#f56954', '#C85C5C', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#113CFC', '#d2d6de'],
         }]
       }
@@ -500,6 +510,55 @@ $pathSidebar = 'dashboard';
         options: donutOptions
       })
     }
+
+    function sendmailBirthday(email, firstname) {
+      email = email.trim();
+      firstname = firstname.trim();
+      if(!email || email.length == 0 || !firstname || firstname.length == 0){
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: 'Thiếu thông tin gửi email',
+        });
+        return;
+      }
+      $.ajax({
+        url: 'sendmail_birthday.php',
+        type: 'GET',
+        dataType: 'JSON',
+        data: {
+          email: email,
+          firstName: firstname
+        },
+        beforeSend: function() {
+          Swal.fire({
+            title: 'Đang gửi email',
+            icon: 'info',
+            onOpen: () => {
+              Swal.showLoading()
+            }
+          });
+        },
+        success: function(data) {
+          if (data.status == 'success') {
+            Swal.fire({
+              title: 'Thông báo',
+              text: data.message,
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
+          } else {
+            Swal.fire({
+              title: 'Thông báo',
+              text: data.message,
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+          }
+        }
+      });
+    }
+
   </script>
 </body>
 
