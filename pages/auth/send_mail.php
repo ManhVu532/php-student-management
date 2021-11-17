@@ -1,6 +1,5 @@
 <?php
 require_once("../../utils/db_helper.php");
-define('HOST', 'http://localhost:8888/student-management/');
 
 if (isset($_GET['code']) && isset($_GET['email'])) {
     $code = $_GET['code'];
@@ -27,4 +26,7 @@ if (isset($_GET['code']) && isset($_GET['email'])) {
     mail($to, $subject, $message, $headers);
 
     echo json_encode(array('status' => 'success', 'message' => "Gửi thành công"));
+}
+else{
+    echo json_encode(array('status' => 'error', 'message' => "Không tìm thấy thông tin"));
 }

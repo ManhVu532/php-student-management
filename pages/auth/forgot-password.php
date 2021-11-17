@@ -2,7 +2,6 @@
 session_start();
 require_once('../../utils/utils.php');
 require_once('../../utils/db_helper.php');
-define('HOST', 'http://localhost:8888/student-management/');
 if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
     if ($user)
