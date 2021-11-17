@@ -44,7 +44,7 @@ if (!empty($_POST)) {
         }
 
         if(!empty($phoneNumber)){
-            if(preg_match("/^[0-9]{9,11}$/", $phoneNumber)) {
+            if(!preg_match("/^[0-9]{9,11}$/", $phoneNumber)) {
                 echo json_encode(array("status" => "error", "message" => "Số điện thoại không đúng định dạng"));
                 exit();
             }

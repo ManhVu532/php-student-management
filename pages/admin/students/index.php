@@ -136,9 +136,9 @@ $pathSidebar = 'students';
                                                 }
                                                 echo "<tr>";
                                                 echo "<td>" . $index . "</td>";
-                                                echo "<td>" . $user['id'] . "</td>";
+                                                echo "<td class='text-nowrap'>" . $user['id'] . "</td>";
                                                 echo "<td>" . $user['lastName'] . ' ' . $user['firstName'] . "</td>";
-                                                echo "<td>" . $user['classId'] . "</td>";
+                                                echo "<td class='text-nowrap'>" . $user['classId'] . "</td>";
                                                 echo "<td>" . $date_format . "</td>";
                                                 echo "<td>" . $user['gender'] . "</td>";
                                                 echo "<td>" . $user['address'] . "</td>";
