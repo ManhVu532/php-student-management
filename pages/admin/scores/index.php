@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../../../utils/db_helper.php");
+require_once("../../../utils/utils.php");
 if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
     if ($user) {
@@ -38,6 +39,7 @@ $pathSidebar = 'scores';
     <link rel="stylesheet" href="../../../dist/css/adminlte.min.css">
 
     <link rel="stylesheet" href="../../../plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="../../../plugins/bootstrap-select-1.13.14/dist/css/bootstrap-select.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -98,9 +100,40 @@ $pathSidebar = 'scores';
                                                 </a>
                                             </div>
                                         </div>
+                                        <div class="col-4">
+                                            <label for="subject-semester">Chọn học phần</label>
+                                            <select id="subject-semester" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-info" title="Chọn học phần...">
+                                                <?php
+                                                $sql = "SELECT ss.semesterId, ss.subjectId, s.name AS subjectName, ss.id FROM subject_semester AS ss, subject_tbl AS s
+                                                WHERE ss.subjectId = s.id
+                                                ORDER BY ss.createAt DESC;";
+                                                $isSelected = false;
+                                                $list = executeResult($sql);
+                                                if (count($list) > 0) {
+                                                    foreach ($list as $item) {
+                                                        $id = $item['id'];
+                                                        $subjectName = $item['subjectName'];
+                                                        $semesterId = $item['semesterId'];
+                                                        $subjectId = $item['subjectId'];
+                                                        if (!$isSelected) {
+                                                            $subjectSemester = $id;
+                                                            $isSelected = true;
+                                                            echo '
+                                                                <option value="' . $id . '" data-tokens="' . $id . $subjectName . $semesterId . $subjectId . '" selected="selected">' . $semesterId . " - " . $subjectName . "-" . $subjectId . " - " . $id . '</option>
+                                                            ';
+                                                        } else {
+                                                            echo '
+                                                                <option value="' . $id . '" data-tokens="' . $id . $subjectName . $semesterId . $subjectId . '">' . $semesterId . " - " . $subjectName . "-" . $subjectId .  " - " . $id . '</option>
+                                                            ';
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="header-student_tbl mb-3"></div>
-                                    <table id="student_tbl" class="w-100 table table-bordered table-striped">
+                                    <div class="header-score_tbl mb-3"></div>
+                                    <table id="score_tbl" class="w-100 table table-bordered table-striped">
                                         <thead>
                                             <tr class="bg-dark">
                                                 <th>STT</th>
@@ -124,12 +157,15 @@ $pathSidebar = 'scores';
                                             $query = 'SELECT u.id, u.firstName, u.lastName, rs.pointCC, rs.pointKT, rs.pointBT, rs.pointTH, rs.pointExam, s.id AS subjectId, s.name, ss.semesterId
                                                 FROM register_subject AS rs, user_tbl AS u, subject_tbl AS s, subject_semester AS ss
                                                 WHERE rs.userId = u.id 
-                                                AND rs.subjectSemesterId = ss.id
+                                                AND rs.subjectSemesterId = "' . $subjectSemester . '"
+                                                AND ss.id = "' . $subjectSemester . '"
                                                 AND ss.subjectId = s.id
                                                 ORDER BY rs.createAt DESC;';
                                             $list = executeResult($query);
                                             $index = 0;
+
                                             foreach ($list as $item) {
+                                                $final = calcFinal($item['pointCC'], $item['pointBT'], $item['pointTH'], $item['pointKT'], $item['pointExam']);
                                                 $index++;
                                                 echo "<tr>";
                                                 echo "<td>" . $index . "</td>";
@@ -143,23 +179,22 @@ $pathSidebar = 'scores';
                                                 echo "<td>" . $item['pointTH'] . "</td>";
                                                 echo "<td>" . $item['pointKT'] . "</td>";
                                                 echo "<td>" . $item['pointExam'] . "</td>";
-                                                echo "<td>A</td>";
-                                                echo "<td>10</td>";
+                                                echo "<td>" . $final . "</td>";
+                                                echo "<td>" . calc($final) . "</td>";
                                                 echo '<td>
-                                                        <div class="text-nowrap">
-                                                            <a href="form.php?id=' . $item["id"] . '" target="_blank" title="Sửa sinh viên" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
+                                                        <div>
+                                                            <a href="form.php?id=' . $item["id"] . '&subjectSemesterId=' . $subjectSemester . '" target="_blank" title="Cập nhật điểm sinh viên" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
-                                                            <button title="Xóa sinh viên" data-id="' . $item['id'] . '" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
-                                                                <i class="fas fa-trash-alt mx-1"></i>
+                                                            <button title="Xóa thông tin của sinh viên này" data-id=' . $item["id"] . ' data-ssid="' . $subjectSemester . '" class = "btn btn-danger rounded-circle mt-2 mx-2 btn-delete" style = "min-height: 46px">
+                                                                <i class="fas fa-user-minus"></i>
                                                             </button>
                                                         </div>
                                                       </td>';
                                                 echo "</tr>";
                                             }
-
-                                            if (count($list) == 0) {
-                                                echo "<tr><td colspan='12' class='text-center'>Không có dữ liệu hoặc không có sinh viên nào</td></tr>";
+                                            if (count($list) ==  0) {
+                                                echo "<tr><td colspan='14' class='text-center'>Không có dữ liệu hoặc không có sinh viên nào</td></tr>";
                                             }
                                             ?>
                                         </tbody>
@@ -221,6 +256,9 @@ $pathSidebar = 'scores';
     <script src="../../../plugins/datatables-buttons/js/buttons.print.js"></script>
     <script src="../../../plugins/datatables-buttons/js/buttons.colVis.js"></script>
     <script src="../../../plugins/moment/moment.min.js"></script>
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../plugins/bootstrap-select-1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script src="../../../plugins/bootstrap-select-1.13.14/dist/js/i18n/defaults-vi_VN.min.js"></script>
 
     <!-- ChartJS -->
     <script src="../../../plugins/chart.js/Chart.min.js"></script>
@@ -230,7 +268,7 @@ $pathSidebar = 'scores';
 
     <script>
         $(function() {
-            $("#student_tbl").DataTable({
+            $("#score_tbl").DataTable({
                 "responsive": true,
                 "searching": false,
                 "lengthChange": true,
@@ -264,8 +302,8 @@ $pathSidebar = 'scores';
                 }, {
                     extend: "csv",
                     charset: "UTF-8",
-                    title: "Người dùng",
-                    filename: "students",
+                    title: "Điểm",
+                    filename: "score",
                     fieldSeparator: ';',
                     className: 'btn btn-outline-danger mt-2',
                     bom: true,
@@ -277,8 +315,8 @@ $pathSidebar = 'scores';
                     },
                 }, {
                     extend: "excel",
-                    title: "Người dùng",
-                    filename: "students",
+                    title: "Điểm",
+                    filename: "score",
                     exportOptions: {
                         columns: ':not(:last-child)',
                     },
@@ -288,8 +326,8 @@ $pathSidebar = 'scores';
                     },
                 }, {
                     extend: "pdf",
-                    title: "Người dùng",
-                    filename: "students",
+                    title: "Điểm",
+                    filename: "score",
                     exportOptions: {
                         columns: ':not(:last-child)',
                     },
@@ -299,8 +337,8 @@ $pathSidebar = 'scores';
                     },
                 }, {
                     extend: "print",
-                    title: "Người dùng",
-                    filename: "students",
+                    title: "Điểm",
+                    filename: "score",
                     exportOptions: {
                         columns: ':not(:last-child)',
                     },
@@ -315,60 +353,70 @@ $pathSidebar = 'scores';
                         $(node).removeClass('btn-secondary')
                     },
                 }]
-            }).buttons().container().appendTo('.header-student_tbl');
+            }).buttons().container().appendTo('.header-score_tbl');
 
-            var table = $('#student_tbl').DataTable();
-            $('#subject_tbl tbody').on('click', 'button.btn-delete', function() {
+            var table = $('#score_tbl').DataTable();
+            $('#score_tbl tbody').on('click', 'button.btn-delete', function() {
                 let id = this.dataset.id;
-                deleteStudent(id, table.row($(this).parents('tr')));
+                let subjectSemesterId = this.dataset.ssid;
+                deleteScore(id, subjectSemesterId, table.row($(this).parents('tr')));
             });
-            $('#subject_tbl tbody').on('click', 'button.btn-reset', function() {
-                let id = this.dataset.id;
-                resetPassword(id);
-            });
+        });
+
+        $("#subject-semester").on('change', () => {
+            searching();
         });
 
 
         function searching() {
             let q = $("#input-search").val();
+            let subjectSemester = $("#subject-semester").val().trim();
             q = q.trim();
             $.ajax({
                 url: 'search.php',
                 type: 'GET',
                 dataType: 'JSON',
                 data: {
-                    'q': q
+                    'q': q,
+                    'subjectSemester': subjectSemester
                 },
                 success: function(data) {
+                    console.log();
                     if (data.status == 'success') {
-                        var table = $('#student_tbl').DataTable();
+                        var table = $('#score_tbl').DataTable();
                         table.clear().draw();
                         if (data.data.length > 0) {
                             data.data.map((item, index) => {
-                                let date = moment(item.dob, 'YYYY-MM-DD hh:mm:ss');
-                                let subject = [index + 1,
-                                    item.id, item.lastName + " " + item.firstName,
-                                    item.classId,
-                                    date.format('DD/MM/YYYY') != 'Invalid date' ? date.format('DD/MM/YYYY') : '',
-                                    item.gender ?? '',
-                                    item.address ?? '',
-                                    item.email ?? '',
-                                    item.phoneNumber ?? '',
+                                let final = calcFinal(item.pointCC,
+                                    item.pointBT,
+                                    item.pointTH,
+                                    item.pointKT,
+                                    item.pointExam);
+                                let score = [index + 1,
+                                    item.id,
+                                    item.lastName + " " + item.firstName,
+                                    item.subjectId,
+                                    item.name,
+                                    item.semesterId,
+                                    item.pointCC,
+                                    item.pointBT,
+                                    item.pointTH,
+                                    item.pointKT,
+                                    item.pointExam,
+                                    final,
+                                    calc(final),
                                     `
-                                    <div class="text-nowrap">
-                                        <button title="Đặt lại mật khẩu" data-id="${item.id}" class = "btn btn-primary rounded-circle mx-2 btn-reset" style = "min-height: 46px">
-                                            <i class="fas fa-lock mx-1"></i>
-                                        </button>
-                                        <a href="form.php?id=${item.id}" target="_blank" title="Sửa sinh viên" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
+                                    <div>
+                                        <a href="form.php?id=${item.id}&subjectSemesterId=${subjectSemester}" target="_blank" title="Sửa sinh viên" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
                                             <i class="fas fa-user-edit"></i>
                                         </a>
-                                        <button title="Xóa sinh viên" data-id="${item.id}" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
+                                        <button title="Xóa thông tin của sinh viên này" data-id="${item.id}" data-ssid="${subjectSemester}" class = "btn btn-danger mt-2 rounded-circle mx-2 btn-delete" style = "min-height: 46px">
                                             <i class="fas fa-user-minus"></i>
                                         </button>
                                     </div>
                                 `
                                 ];
-                                table.row.add(subject).draw();
+                                table.row.add(score).draw();
                             });
                         }
                     } else {
@@ -387,71 +435,17 @@ $pathSidebar = 'scores';
             searching();
         });
 
-        function resetPassword(id) {
-            if (!id) return;
+        function deleteScore(id, subjectSemesterId, row) {
+            if (!id || !subjectSemesterId) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thông báo',
+                    text: 'Thông tìn không đầy đủ!'
+                })
+                return;
+            }
             Swal.fire({
-                title: `Bạn có chắc chắn muốn đặt lại mật khẩu cho sinh viên sinh viên ${id}?`,
-                text: "Bạn sẽ không thể khôi phục lại dữ liệu này!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Có, đặt lại ngay!'
-            }).then((result) => {
-                if (result.value) {
-                    Swal.fire({
-                        html: `
-                        <form class="form-inline">
-                            <label for="confirm-password">Mật khẩu:</label>
-                            <input class="form-control flex-grow-1 ml-2" id="confirm-password" type="password" placeholder="Nhập mật khẩu của bạn"/>
-                        </form>
-                        `,
-                        icon: 'warning',
-                        title: 'Xác nhận mật khẩu!',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Xác nhận xóa!',
-                        cancelButtonText: 'Hủy',
-                    }).then(result => {
-                        if (result.value) {
-                            let password = $("#confirm-password").val();
-                            $.ajax({
-                                url: 'reset_password.php',
-                                type: 'POST',
-                                dataType: 'JSON',
-                                data: {
-                                    'id': id,
-                                    'password': password
-                                },
-                                success: function(data) {
-                                    if (data.status == 'success') {
-                                        Swal.fire({
-                                            title: 'Thông báo!',
-                                            text: data.message,
-                                            icon: 'success',
-                                            confirmButtonText: 'OK'
-                                        })
-                                    } else {
-                                        Swal.fire({
-                                            title: 'Lỗi đặt lại mật khẩu!',
-                                            text: data.message,
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-        }
-
-        function deleteStudent(id, row) {
-            if (!id) return;
-            Swal.fire({
-                title: `Bạn có chắc chắn muốn xóa sinh viên ${id}?`,
+                title: `Bạn có chắc chắn muốn xóa học kỳ ${id}?`,
                 text: "Bạn sẽ không thể khôi phục lại dữ liệu này!",
                 icon: 'warning',
                 showCancelButton: true,
@@ -483,7 +477,8 @@ $pathSidebar = 'scores';
                                 dataType: 'JSON',
                                 data: {
                                     'id': id,
-                                    'password': password
+                                    'password': password,
+                                    'subjectSemesterId': subjectSemesterId
                                 },
                                 success: function(data) {
                                     if (data.status == 'success') {
