@@ -28,5 +28,10 @@ if (!empty($_POST)) {
         $query = "UPDATE semester_tbl SET `type` = '".$type."', startYear = '".$startYear."', endYear = '".$endYear."', fee = '".$fee."' WHERE id = '".$id."';";
         executeQuery($query);
         echo json_encode(array("status" => "success", "message" => "Tạo mới thành công"));
+    }else{
+        echo json_encode(array("status" => "error", "message" => "Vui lòng điền đầy dủ thông tin"));
+        exit();
     }
 }
+echo json_encode(array("status" => "error", "message" => "Vui lòng điền đầy dủ thông tin"));
+exit();

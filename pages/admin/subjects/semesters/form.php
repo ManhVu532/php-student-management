@@ -172,7 +172,7 @@ if (isset($_GET['id'])) {
                                         </div>
                                         <div class="form-group col-lg-6 col-sm-12">
                                             <label for="lecturer">Giảng viên*</label>
-                                            <input type="text" class="form-control" id="lecturer" placeholder="Nhập mã phòng" value="<?= $u_lecturer ?>">
+                                            <input type="text" class="form-control" id="lecturer" placeholder="Nhập tên giảng viên" value="<?= $u_lecturer ?>">
                                         </div>
                                         <div class="form-group col-lg-6 col-sm-12">
                                             <label for="dayOfWeek">Thứ*</label>
@@ -196,7 +196,7 @@ if (isset($_GET['id'])) {
                                         </div>
                                         <div class="form-group col-lg-6 col-sm-12">
                                             <label for="numberOfSlots">Số lượng sinh viên*</label>
-                                            <input type="number" class="form-control" id="numberOfSlots" placeholder="Nhập số lương sinh viên" value="<?= $u_numberOfSlots ?>">
+                                            <input type="number" class="form-control" id="numberOfSlots" placeholder="Nhập số lượng sinh viên" value="<?= $u_numberOfSlots ?>">
                                         </div>
                                     </div>
                                     <!-- /.card-body -->

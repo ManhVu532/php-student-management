@@ -38,6 +38,7 @@ $pathSidebar = 'schedules';
     <link rel="stylesheet" href="../../../dist/css/adminlte.min.css">
 
     <link rel="stylesheet" href="../../../plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="../../../plugins/bootstrap-select-1.13.14/dist/css/bootstrap-select.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -74,7 +75,7 @@ $pathSidebar = 'schedules';
                             <div class="card elevation-2">
                                 <div class="card-header">
                                     <h3 class="card-title">
-                                        <i class="fas fa-users mr-1"></i>Danh sách điểm sinh viên
+                                        <i class="fas fa-users mr-1"></i>Danh sách lịch thi
                                     </h3>
                                 </div>
                                 <!-- /.card-header -->
@@ -92,25 +93,46 @@ $pathSidebar = 'schedules';
                                         </div>
                                         <div class="col-4"></div>
                                         <div class="col-2">
-                                            <div class="text-right">
-                                                <a href="form.php" class="btn btn-success">
-                                                    <i class="fas fa-plus mr-1"></i>Thêm mới
-                                                </a>
-                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="mt-2">Chọn học kỳ:</label>
+                                            <select id="semester" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-info">
+                                                <?php
+                                                $sql = "SELECT * FROM semester_tbl ORDER BY createAt DESC;";
+                                                $list = executeResult($sql);
+                                                $isSelected = false;
+                                                if (count($list) > 0) {
+                                                    foreach ($list as $item) {
+                                                        $id = $item['id'];
+                                                        $type = $item['type'];
+                                                        if (!$isSelected) {
+                                                            $semester = $id;
+                                                            $isSelected = true;
+                                                            echo '
+                                                                <option value="' . $id . '" data-tokens="' . $id . " Học kỳ " . $type . '" selected="selected">' . "Học kỳ " . $type . " " . $item['startYear'] . "-" . $item['endYear'] . '</option>
+                                                            ';
+                                                        } else {
+                                                            echo '
+                                                                <option value="' . $id . '" data-tokens="' . $id . " Học kỳ " . $type . '">' . "Học kỳ " . $type . " " . $item['startYear'] . "-" . $item['endYear'] . '</option>
+                                                            ';
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="header-student_tbl mb-3"></div>
-                                    <table id="student_tbl" class="w-100 table table-bordered table-striped">
+                                    <div class="header-schedule_tbl mb-3"></div>
+                                    <table id="schedule_tbl" class="w-100 table table-bordered table-striped">
                                         <thead>
                                             <tr class="bg-dark">
                                                 <th>STT</th>
                                                 <th>Mã môn học</th>
                                                 <th>Tên môn học</th>
-                                                <th>Kỳ học</th>
                                                 <th>Ngày thi</th>
                                                 <th>Giờ thi</th>
                                                 <th>Phòng thi</th>
-                                                <th>Thời lượng</th>
+                                                <th>Thời lượng (phút)</th>
                                                 <th>Hình thức thi</th>
                                                 <th>Số lượng</th>
                                                 <th>Thao tác</th>
@@ -118,15 +140,23 @@ $pathSidebar = 'schedules';
                                         </thead>
                                         <tbody id="tbl_body">
                                             <?php
-                                            $query = 'SELECT ss.semesterId, ss.subjectId, s.name, ss.examAt, ss.totalTime, ss.examType, ss.roomExam,
-                                                        rs.total, ss.id
+                                            $query = 'SELECT ss.subjectId, s.name, ss.examAt, ss.totalTime, ss.examType, ss.roomExam,
+                                                    rs.total, ss.id
                                                     FROM subject_tbl AS s, subject_semester AS ss,
-                                                    (SELECT COUNT(userId) AS total, subjectSemesterId
-                                                        FROM `register_subject`
-                                                        GROUP BY subjectSemesterId) AS rs
+                                                        (SELECT COUNT(userId) AS total, subjectSemesterId
+                                                            FROM `register_subject`
+                                                            GROUP BY subjectSemesterId) AS rs
                                                     WHERE s.id = ss.subjectId
                                                     AND ss.id = rs.subjectSemesterId
-                                                    ORDER BY ss.createAt DESC;';
+                                                    AND ss.semesterId = "' . $semester . '"
+                                                    UNION
+                                                    SELECT ss.subjectId, s.name, ss.examAt, ss.totalTime, ss.examType, ss.roomExam,
+                                                    0 AS total, ss.id
+                                                    FROM subject_tbl AS s, subject_semester AS ss
+                                                    WHERE s.id = ss.subjectId
+                                                    AND ss.id NOT IN (SELECT subjectSemesterId FROM register_subject)
+                                                    AND ss.semesterId = "' . $semester . '"
+                                                    ';
                                             $list = executeResult($query);
                                             $index = 0;
                                             foreach ($list as $item) {
@@ -143,7 +173,6 @@ $pathSidebar = 'schedules';
                                                 echo "<td>$index</td>";
                                                 echo "<td>" . $item['subjectId'] . "</td>";
                                                 echo "<td>" . $item['name'] . "</td>";
-                                                echo "<td class='text-nowrap'>" . $item['semesterId'] . "</td>";
                                                 echo "<td>" . $date_format . "</td>";
                                                 echo "<td>" . $time_format . "</td>";
                                                 echo "<td>" . $item['roomExam'] . "</td>";
@@ -152,12 +181,9 @@ $pathSidebar = 'schedules';
                                                 echo "<td>" . $item['total'] . "</td>";
                                                 echo '<td>
                                                         <div class="text-nowrap">
-                                                            <a href="form.php?id=' . $item["id"] . '" target="_blank" title="Sửa môn học" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
+                                                            <a href="form.php?id=' . $item["id"] . '" target="_blank" title="Sửa lịch thi" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
-                                                            <button title="Xóa môn học" data-id="' . $item['id'] . '" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
-                                                                <i class="fas fa-trash-alt mx-1"></i>
-                                                            </button>
                                                         </div>
                                                       </td>';
                                                 echo "</tr>";
@@ -173,11 +199,10 @@ $pathSidebar = 'schedules';
                                                 <th>STT</th>
                                                 <th>Mã môn học</th>
                                                 <th>Tên môn học</th>
-                                                <th>Kỳ học</th>
                                                 <th>Ngày thi</th>
                                                 <th>Giờ thi</th>
                                                 <th>Phòng thi</th>
-                                                <th>Thời lượng</th>
+                                                <th>Thời lượng (phút)</th>
                                                 <th>Hình thức thi</th>
                                                 <th>Số lượng</th>
                                                 <th>Thao tác</th>
@@ -229,10 +254,12 @@ $pathSidebar = 'schedules';
     <!-- AdminLTE App -->
     <script src="../../../dist/js/adminlte.min.js"></script>
     <script src="../../../plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="../../../plugins/bootstrap-select-1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script src="../../../plugins/bootstrap-select-1.13.14/dist/js/i18n/defaults-vi_VN.min.js"></script>
 
     <script>
         $(function() {
-            $("#student_tbl").DataTable({
+            $("#schedule_tbl").DataTable({
                 "responsive": true,
                 "searching": false,
                 "lengthChange": true,
@@ -317,60 +344,64 @@ $pathSidebar = 'schedules';
                         $(node).removeClass('btn-secondary')
                     },
                 }]
-            }).buttons().container().appendTo('.header-student_tbl');
+            }).buttons().container().appendTo('.header-schedule_tbl');
 
-            var table = $('#student_tbl').DataTable();
-            $('#subject_tbl tbody').on('click', 'button.btn-delete', function() {
+            var table = $('#schedule_tbl').DataTable();
+            $('#schedule_tbl tbody').on('click', 'button.btn-delete', function() {
                 let id = this.dataset.id;
-                deleteStudent(id, table.row($(this).parents('tr')));
+                deleteSchedule(id, table.row($(this).parents('tr')));
             });
-            $('#subject_tbl tbody').on('click', 'button.btn-reset', function() {
-                let id = this.dataset.id;
-                resetPassword(id);
-            });
+        });
+
+        $("#semester").on('change', function() {
+            searching();
         });
 
 
         function searching() {
             let q = $("#input-search").val();
             q = q.trim();
+            let semesterId = $("#semester").val().trim();
+            if (q.length == 0) {
+                console.log("empty");
+            }
             $.ajax({
                 url: 'search.php',
                 type: 'GET',
                 dataType: 'JSON',
                 data: {
-                    'q': q
+                    'q': q,
+                    'semesterId': semesterId
                 },
                 success: function(data) {
+                    if (q.length == 0) {
+                        console.log("empty:", data);
+                    }
                     if (data.status == 'success') {
-                        var table = $('#student_tbl').DataTable();
+                        var table = $('#schedule_tbl').DataTable();
                         table.clear().draw();
                         if (data.data.length > 0) {
                             data.data.map((item, index) => {
-                                let date = moment(item.dob, 'YYYY-MM-DD hh:mm:ss');
-                                let subject = [index + 1,
-                                    item.id, item.lastName + " " + item.firstName,
-                                    item.classId,
+                                let date = moment(item.examAt, 'YYYY-MM-DD hh:mm:ss');
+                                let schedule = [
+                                    index + 1,
+                                    item.subjectId,
+                                    item.name,
                                     date.format('DD/MM/YYYY') != 'Invalid date' ? date.format('DD/MM/YYYY') : '',
-                                    item.gender ?? '',
-                                    item.address ?? '',
-                                    item.email ?? '',
-                                    item.phoneNumber ?? '',
+                                    date.format('hh:mm') != 'Invalid date' ? date.format('hh:mm') : '',
+                                    item.roomExam,
+                                    item.totalTime,
+                                    item.examType,
+                                    item.total,
                                     `
                                     <div class="text-nowrap">
-                                        <button title="Đặt lại mật khẩu" data-id="${item.id}" class = "btn btn-primary rounded-circle mx-2 btn-reset" style = "min-height: 46px">
-                                            <i class="fas fa-lock mx-1"></i>
-                                        </button>
-                                        <a href="form.php?id=${item.id}" target="_blank" title="Sửa sinh viên" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
+                                        <a href="form.php?id=${item.id}" target="_blank" title="Sửa lịch thi" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
                                             <i class="fas fa-user-edit"></i>
                                         </a>
-                                        <button title="Xóa sinh viên" data-id="${item.id}" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
-                                            <i class="fas fa-user-minus"></i>
-                                        </button>
                                     </div>
                                 `
                                 ];
-                                table.row.add(subject).draw();
+                                table.row.add(schedule).draw();
                             });
                         }
                     } else {
@@ -389,68 +420,7 @@ $pathSidebar = 'schedules';
             searching();
         });
 
-        function resetPassword(id) {
-            if (!id) return;
-            Swal.fire({
-                title: `Bạn có chắc chắn muốn đặt lại mật khẩu cho sinh viên sinh viên ${id}?`,
-                text: "Bạn sẽ không thể khôi phục lại dữ liệu này!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Có, đặt lại ngay!'
-            }).then((result) => {
-                if (result.value) {
-                    Swal.fire({
-                        html: `
-                        <form class="form-inline">
-                            <label for="confirm-password">Mật khẩu:</label>
-                            <input class="form-control flex-grow-1 ml-2" id="confirm-password" type="password" placeholder="Nhập mật khẩu của bạn"/>
-                        </form>
-                        `,
-                        icon: 'warning',
-                        title: 'Xác nhận mật khẩu!',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Xác nhận xóa!',
-                        cancelButtonText: 'Hủy',
-                    }).then(result => {
-                        if (result.value) {
-                            let password = $("#confirm-password").val();
-                            $.ajax({
-                                url: 'reset_password.php',
-                                type: 'POST',
-                                dataType: 'JSON',
-                                data: {
-                                    'id': id,
-                                    'password': password
-                                },
-                                success: function(data) {
-                                    if (data.status == 'success') {
-                                        Swal.fire({
-                                            title: 'Thông báo!',
-                                            text: data.message,
-                                            icon: 'success',
-                                            confirmButtonText: 'OK'
-                                        })
-                                    } else {
-                                        Swal.fire({
-                                            title: 'Lỗi đặt lại mật khẩu!',
-                                            text: data.message,
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-        }
-
-        function deleteStudent(id, row) {
+        function deleteSchedule(id, row) {
             if (!id) return;
             Swal.fire({
                 title: `Bạn có chắc chắn muốn xóa sinh viên ${id}?`,

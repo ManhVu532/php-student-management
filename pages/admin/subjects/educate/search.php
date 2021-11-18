@@ -1,8 +1,8 @@
 <?php
 require_once("../../../../utils/db_helper.php");
 require_once("../../../../utils/utils.php");
-if (!empty($_GET)) {
-    if ($_GET['q']) {
+if (isset($_GET['q'])) {
+    if (!empty($_GET['q'])) {
         $q = $_GET['q'];
         $q = validate_data($q);
         $sql = "SELECT * FROM subject_tbl WHERE `id` LIKE '%$q%' OR `name` LIKE '%$q%' OR `numberOfCredits` LIKE '%$q%' OR `numberOfLessons` LIKE '%$q%' ORDER BY createAt DESC;";

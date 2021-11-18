@@ -89,7 +89,7 @@ $pathSidebar = 'dashboard';
                 <div class="icon">
                   <i class="nav-icon fas fa-users"></i>
                 </div>
-                <a href="#" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="<?=HOST?>pages/admin/students/index.php" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
@@ -112,7 +112,7 @@ $pathSidebar = 'dashboard';
                 <div class="icon">
                   <i class="nav-icon fas fa-book"></i>
                 </div>
-                <a href="#" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="<?=HOST?>pages/admin/subjects/educate/index.php" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
@@ -136,7 +136,7 @@ $pathSidebar = 'dashboard';
                 <div class="icon">
                   <i class="nav-icon fas fa-graduation-cap"></i>
                 </div>
-                <a href="#" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="<?=HOST?>pages/admin/scores/index.php" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
@@ -159,7 +159,7 @@ $pathSidebar = 'dashboard';
                 <div class="icon">
                   <i class="nav-icon far fa-calendar-alt"></i>
                 </div>
-                <a href="#" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="<?=HOST?>pages/admin/schedules/index.php" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
