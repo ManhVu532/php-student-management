@@ -99,8 +99,8 @@ $pathSidebar = 'semesters';
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="header-student_tbl mb-3"></div>
-                                    <table id="student_tbl" class="w-100 table table-bordered table-striped">
+                                    <div class="header-semester_tbl mb-3"></div>
+                                    <table id="semester_tbl" class="w-100 table table-bordered table-striped">
                                         <thead>
                                             <tr class="bg-dark">
                                                 <th>STT</th>
@@ -122,7 +122,7 @@ $pathSidebar = 'semesters';
                                                 echo "<td>" . $index . "</td>";
                                                 echo "<td>" . $semester['id'] . "</td>";
                                                 echo "<td> Học kỳ " . $semester['type'] . "</td>";
-                                                echo "<td>" . $semester['startYear'] . " - " .$semester['endYear'] . "</td>";
+                                                echo "<td>" . $semester['startYear'] . " - " . $semester['endYear'] . "</td>";
                                                 echo "<td>" . $semester['fee'] . "</td>";
                                                 echo '<td>
                                                         <div class="text-nowrap">
@@ -201,7 +201,7 @@ $pathSidebar = 'semesters';
 
     <script>
         $(function() {
-            $("#student_tbl").DataTable({
+            $("#semester_tbl").DataTable({
                 "responsive": true,
                 "searching": false,
                 "lengthChange": true,
@@ -219,7 +219,11 @@ $pathSidebar = 'semesters';
                         "next": "Sau",
                         "previous": "Trước"
                     },
-                    "emptyTable": "Không có dữ liệu"
+                    "emptyTable": "Không có dữ liệu",
+                    "search": "Tìm kiếm:",
+                    "sZeroRecords": "Không tìm thấy dữ liệu khớp",
+                    "sInfoFiltered": "(Tìm kiếm trong _MAX_ tổng số bản ghi)",
+                    "sInfoEmpty": "Hiển thị 0 đến 0 của 0 bản ghi"
                 },
                 code: "utf-8",
                 "buttons": [{
@@ -282,16 +286,12 @@ $pathSidebar = 'semesters';
                         $(node).removeClass('btn-secondary')
                     },
                 }]
-            }).buttons().container().appendTo('.header-student_tbl');
+            }).buttons().container().appendTo('.header-semester_tbl');
 
-            var table = $('#student_tbl').DataTable();
-            $('#subject_tbl tbody').on('click', 'button.btn-delete', function() {
+            var table = $('#semester_tbl').DataTable();
+            $('#semester_tbl tbody').on('click', 'button.btn-delete', function() {
                 let id = this.dataset.id;
-                deleteStudent(id, table.row($(this).parents('tr')));
-            });
-            $('#subject_tbl tbody').on('click', 'button.btn-reset', function() {
-                let id = this.dataset.id;
-                resetPassword(id);
+                deleteSemester(id, table.row($(this).parents('tr')));
             });
         });
 
@@ -308,34 +308,26 @@ $pathSidebar = 'semesters';
                 },
                 success: function(data) {
                     if (data.status == 'success') {
-                        var table = $('#student_tbl').DataTable();
+                        var table = $('#semester_tbl').DataTable();
                         table.clear().draw();
                         if (data.data.length > 0) {
                             data.data.map((item, index) => {
-                                let date = moment(item.dob, 'YYYY-MM-DD hh:mm:ss');
-                                let subject = [index + 1,
-                                    item.id, item.lastName + " " + item.firstName,
-                                    item.classId,
-                                    date.format('DD/MM/YYYY') != 'Invalid date' ? date.format('DD/MM/YYYY') : '',
-                                    item.gender ?? '',
-                                    item.address ?? '',
-                                    item.email ?? '',
-                                    item.phoneNumber ?? '',
+                                let semester = [index + 1,
+                                    item.id, "Học kỳ " + item.type,
+                                    item.startYear + "-" + item.endYear,
+                                    item.fee,
                                     `
                                     <div class="text-nowrap">
-                                        <button title="Đặt lại mật khẩu" data-id="${item.id}" class = "btn btn-primary rounded-circle mx-2 btn-reset" style = "min-height: 46px">
-                                            <i class="fas fa-lock mx-1"></i>
-                                        </button>
-                                        <a href="form.php?id=${item.id}" target="_blank" title="Sửa sinh viên" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
+                                        <a href="form.php?id=${item.id}" target="_blank" title="Sửa kỳ học" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
                                             <i class="fas fa-user-edit"></i>
                                         </a>
-                                        <button title="Xóa sinh viên" data-id="${item.id}" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
+                                        <button title="Xóa kỳ học" data-id="${item.id}" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
                                             <i class="fas fa-user-minus"></i>
                                         </button>
                                     </div>
                                 `
                                 ];
-                                table.row.add(subject).draw();
+                                table.row.add(semester).draw();
                             });
                         }
                     } else {
@@ -354,71 +346,10 @@ $pathSidebar = 'semesters';
             searching();
         });
 
-        function resetPassword(id) {
+        function deleteSemester(id, row) {
             if (!id) return;
             Swal.fire({
-                title: `Bạn có chắc chắn muốn đặt lại mật khẩu cho sinh viên sinh viên ${id}?`,
-                text: "Bạn sẽ không thể khôi phục lại dữ liệu này!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Có, đặt lại ngay!'
-            }).then((result) => {
-                if (result.value) {
-                    Swal.fire({
-                        html: `
-                        <form class="form-inline">
-                            <label for="confirm-password">Mật khẩu:</label>
-                            <input class="form-control flex-grow-1 ml-2" id="confirm-password" type="password" placeholder="Nhập mật khẩu của bạn"/>
-                        </form>
-                        `,
-                        icon: 'warning',
-                        title: 'Xác nhận mật khẩu!',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Xác nhận xóa!',
-                        cancelButtonText: 'Hủy',
-                    }).then(result => {
-                        if (result.value) {
-                            let password = $("#confirm-password").val();
-                            $.ajax({
-                                url: 'reset_password.php',
-                                type: 'POST',
-                                dataType: 'JSON',
-                                data: {
-                                    'id': id,
-                                    'password': password
-                                },
-                                success: function(data) {
-                                    if (data.status == 'success') {
-                                        Swal.fire({
-                                            title: 'Thông báo!',
-                                            text: data.message,
-                                            icon: 'success',
-                                            confirmButtonText: 'OK'
-                                        })
-                                    } else {
-                                        Swal.fire({
-                                            title: 'Lỗi đặt lại mật khẩu!',
-                                            text: data.message,
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-        }
-
-        function deleteStudent(id, row) {
-            if (!id) return;
-            Swal.fire({
-                title: `Bạn có chắc chắn muốn xóa sinh viên ${id}?`,
+                title: `Bạn có chắc chắn muốn xóa học kỳ ${id}?`,
                 text: "Bạn sẽ không thể khôi phục lại dữ liệu này!",
                 icon: 'warning',
                 showCancelButton: true,

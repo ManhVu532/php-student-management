@@ -130,7 +130,7 @@ $pathSidebar = 'subjects-educate';
                                                             <a href="form.php?id=' . $subject["id"] . '" target="_blank" title="Sửa môn học" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
-                                                            <button title="Xóa môn học" data-id="'.$subject['id'].'" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
+                                                            <button title="Xóa môn học" data-id="' . $subject['id'] . '" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
                                                                 <i class="fas fa-trash-alt mx-1"></i>
                                                             </button>
                                                         </div>
@@ -220,7 +220,11 @@ $pathSidebar = 'subjects-educate';
                         "next": "Sau",
                         "previous": "Trước"
                     },
-                    "emptyTable": "Không có dữ liệu"
+                    "emptyTable": "Không có dữ liệu",
+                    "search": "Tìm kiếm:",
+                    "sZeroRecords": "Không tìm thấy dữ liệu khớp",
+                    "sInfoFiltered": "(Tìm kiếm trong _MAX_ tổng số bản ghi)",
+                    "sInfoEmpty": "Hiển thị 0 đến 0 của 0 bản ghi"
                 },
                 code: "utf-8",
                 "buttons": [{
@@ -284,7 +288,7 @@ $pathSidebar = 'subjects-educate';
                     },
                 }]
             }).buttons().container().appendTo('.header-subjects_tbl');
-            
+
             var table = $('#subject_tbl').DataTable();
             $('#subject_tbl tbody').on('click', 'button.btn-delete', function() {
                 let id = this.dataset.id;
@@ -313,10 +317,10 @@ $pathSidebar = 'subjects-educate';
                             list = data.data.map((item, index) => {
                                 let subject = [index + 1, item.id, item.name, item.numberOfCredits, item.numberOfLessons, `
                                 <div class="text-nowrap">
-                                    <a href='form.php?id=${item.id}' target='_blank' title='Sửa sinh viên' class = 'btn btn-warning rounded-circle mx-2' style = 'height: 46px; padding-top: 10px'>
+                                    <a href='form.php?id=${item.id}' target='_blank' title='Sửa môn học' class = 'btn btn-warning rounded-circle mx-2' style = 'height: 46px; padding-top: 10px'>
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button title='Xóa sinh viên' data-id="${item.id}" class = 'btn btn-danger rounded-circle mx-2 btn-delete' style = 'min-height: 46px'>
+                                    <button title='Xóa môn học' data-id="${item.id}" class = 'btn btn-danger rounded-circle mx-2 btn-delete' style = 'min-height: 46px'>
                                         <i class="fas fa-trash-alt mx-1"></i>
                                     </button>
                                 </div>

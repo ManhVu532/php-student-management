@@ -111,13 +111,13 @@ $pathSidebar = 'subjects-semester';
                                                     foreach ($list as $item) {
                                                         $id = $item['id'];
                                                         $type = $item['type'];
-                                                        if(!$isSelected) {
+                                                        if (!$isSelected) {
                                                             $semester = $id;
                                                             $isSelected = true;
                                                             echo '
                                                                 <option value="' . $id . '" data-tokens="' . $id . " Học kỳ " . $type . '" selected="selected">' . "Học kỳ " . $type . " " . $item['startYear'] . "-" . $item['endYear'] . '</option>
                                                             ';
-                                                        }else{
+                                                        } else {
                                                             echo '
                                                                 <option value="' . $id . '" data-tokens="' . $id . " Học kỳ " . $type . '">' . "Học kỳ " . $type . " " . $item['startYear'] . "-" . $item['endYear'] . '</option>
                                                             ';
@@ -157,14 +157,14 @@ $pathSidebar = 'subjects-semester';
                                                         AS rs
                                                     WHERE s.id = ss.subjectId
                                                     AND rs.subjectSemesterId = ss.id
-                                                    AND ss.semesterId = "'.$semester.'"
+                                                    AND ss.semesterId = "' . $semester . '"
                                                     UNION DISTINCT
                                                     SELECT ss.id, ss.subjectId, s.name, ss.semesterId, ss.lecturer, ss.room, ss.dayOfWeek,
                                                         ss.numberOfSlots, ss.startAt, ss.endAt, 0 AS total
                                                     FROM subject_tbl AS s, subject_semester AS ss, register_subject AS rs
                                                     WHERE s.id = ss.subjectId
                                                     AND rs.subjectSemesterId != ss.id
-                                                    AND ss.semesterId = "'.$semester.'";';
+                                                    AND ss.semesterId = "' . $semester . '";';
                                             $list = executeResult($query);
                                             $index = 0;
                                             foreach ($list as $item) {
@@ -286,7 +286,11 @@ $pathSidebar = 'subjects-semester';
                         "next": "Sau",
                         "previous": "Trước"
                     },
-                    "emptyTable": "Không có dữ liệu"
+                    "emptyTable": "Không có dữ liệu",
+                    "search": "Tìm kiếm:",
+                    "sZeroRecords": "Không tìm thấy dữ liệu khớp",
+                    "sInfoFiltered": "(Tìm kiếm trong _MAX_ tổng số bản ghi)",
+                    "sInfoEmpty": "Hiển thị 0 đến 0 của 0 bản ghi"
                 },
                 code: "utf-8",
                 "buttons": [{
@@ -386,16 +390,17 @@ $pathSidebar = 'subjects-semester';
 
                             list = data.data.map((item) => {
                                 let subject = [item.id, item.subjectId, item.name, item.semesterId, item.lecturer,
-                                                item.room, item.dayOfWeek, item.startAt, item.endAt, item.numberOfSlots, '10', 'A', `
+                                    item.room, item.dayOfWeek, item.startAt, item.endAt, item.numberOfSlots, '10', 'A', `
                                 <div class="text-nowrap">
-                                    <a href='form.php?id=${item.id}' target='_blank' title='Sửa sinh viên' class = 'btn btn-warning rounded-circle mx-2' style = 'height: 46px; padding-top: 10px'>
+                                    <a href='form.php?id=${item.id}' target='_blank' title='Sửa môn học' class = 'btn btn-warning rounded-circle mx-2' style = 'height: 46px; padding-top: 10px'>
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button title='Xóa sinh viên' data-id="${item.id}" class = 'btn btn-danger rounded-circle mx-2 btn-delete' style = 'min-height: 46px'>
+                                    <button title='Xóa môn học' data-id="${item.id}" class = 'btn btn-danger rounded-circle mx-2 btn-delete' style = 'min-height: 46px'>
                                         <i class="fas fa-trash-alt mx-1"></i>
                                     </button>
                                 </div>
-                                `];
+                                `
+                                ];
                                 table.row.add(subject).draw();
                             });
                         } else {

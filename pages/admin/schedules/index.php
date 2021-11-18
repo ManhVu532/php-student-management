@@ -133,7 +133,7 @@ $pathSidebar = 'schedules';
                                                 $index++;
                                                 $date_format = '';
                                                 $time_format = '';
-                                                if($item['examAt']){
+                                                if ($item['examAt']) {
                                                     $date_format = DateTime::createFromFormat("Y-m-d H:i:s",  $item['examAt']);
                                                     $time_format = DateTime::createFromFormat("Y-m-d H:i:s",  $item['examAt']);
                                                     $date_format = $date_format->format("d/m/Y");
@@ -152,7 +152,7 @@ $pathSidebar = 'schedules';
                                                 echo "<td>" . $item['total'] . "</td>";
                                                 echo '<td>
                                                         <div class="text-nowrap">
-                                                            <a href="form.php?id=' . $item["id"]. '" target="_blank" title="Sửa môn học" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
+                                                            <a href="form.php?id=' . $item["id"] . '" target="_blank" title="Sửa môn học" class = "btn btn-warning rounded-circle mx-2" style = "height: 46px; padding-top: 10px">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
                                                             <button title="Xóa môn học" data-id="' . $item['id'] . '" class = "btn btn-danger rounded-circle mx-2 btn-delete" style = "min-height: 46px">
@@ -250,7 +250,11 @@ $pathSidebar = 'schedules';
                         "next": "Sau",
                         "previous": "Trước"
                     },
-                    "emptyTable": "Không có dữ liệu"
+                    "emptyTable": "Không có dữ liệu",
+                    "search": "Tìm kiếm:",
+                    "sZeroRecords": "Không tìm thấy dữ liệu khớp",
+                    "sInfoFiltered": "(Tìm kiếm trong _MAX_ tổng số bản ghi)",
+                    "sInfoEmpty": "Hiển thị 0 đến 0 của 0 bản ghi"
                 },
                 code: "utf-8",
                 "buttons": [{

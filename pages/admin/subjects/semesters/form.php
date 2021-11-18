@@ -89,12 +89,12 @@ if (isset($_GET['id'])) {
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Môn học theo học kỳ</h1>
+                            <h1>Môn học theo kỳ học</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-                                <li class="breadcrumb-item active">Thêm mới môn học theo học kỳ</li>
+                                <li class="breadcrumb-item active">Môn học theo kỳ học</li>
                             </ol>
                         </div>
                     </div>
@@ -298,6 +298,8 @@ if (isset($_GET['id'])) {
                         Swal.fire({
                             title: 'Đang cập nhật...',
                             icon: 'info',
+                            showConfirmButton: false,
+                            showCancelButton: false,
                             onOpen: () => {
                                 Swal.showLoading();
                             }
@@ -340,6 +342,8 @@ if (isset($_GET['id'])) {
                     Swal.fire({
                         title: 'Đang thêm mới...',
                         icon: 'info',
+                        showConfirmButton: false,
+                        showCancelButton: false,
                         onOpen: () => {
                             Swal.showLoading();
                         }

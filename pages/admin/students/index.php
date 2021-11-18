@@ -246,7 +246,11 @@ $pathSidebar = 'students';
                         "next": "Sau",
                         "previous": "Trước"
                     },
-                    "emptyTable": "Không có dữ liệu"
+                    "emptyTable": "Không có dữ liệu",
+                    "search": "Tìm kiếm:",
+                    "sZeroRecords": "Không tìm thấy dữ liệu khớp",
+                    "sInfoFiltered": "(Tìm kiếm trong _MAX_ tổng số bản ghi)",
+                    "sInfoEmpty": "Hiển thị 0 đến 0 của 0 bản ghi"
                 },
                 code: "utf-8",
                 "buttons": [{
