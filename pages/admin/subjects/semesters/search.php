@@ -24,13 +24,13 @@ if (isset($_GET['q']) && isset($_GET['semester'])) {
         UNION DISTINCT
         SELECT ss.id, ss.subjectId, s.name, ss.semesterId, ss.lecturer, ss.room, ss.dayOfWeek,
             ss.numberOfSlots, ss.startAt, ss.endAt, 0 AS total
-        FROM subject_tbl AS s, subject_semester AS ss, register_subject AS rs
+        FROM subject_tbl AS s, subject_semester AS ss
         WHERE s.id = ss.subjectId
-        AND rs.subjectSemesterId != ss.id
+        AND ss.id NOT IN (SELECT subjectSemesterId FROM register_subject)
         AND ss.semesterId = "'.$semester.'"
         AND (ss.id LIKE "%'.$q.'%" OR s.name LIKE "%'.$q.'%" OR ss.lecturer LIKE "%'.$q.'%"
         OR ss.room LIKE "%'.$q.'%" OR ss.dayOfWeek LIKE "%'.$q.'%" OR ss.startAt LIKE "%'.$q.'%" OR ss.endAt LIKE "%'.$q.'%"
-        OR ss.numberOfSlots LIKE "%'.$q.'%" OR ss.subjectId LIKE "%'.$q.'%"  OR rs.total LIKE "%'.$q.'%");';
+        OR ss.numberOfSlots LIKE "%'.$q.'%" OR ss.subjectId LIKE "%'.$q.'%");';
 
         $result = executeResult($sql);
         if (count($result) > 0) {
@@ -56,9 +56,9 @@ if (isset($_GET['q']) && isset($_GET['semester'])) {
         UNION DISTINCT
         SELECT ss.id, ss.subjectId, s.name, ss.semesterId, ss.lecturer, ss.room, ss.dayOfWeek,
             ss.numberOfSlots, ss.startAt, ss.endAt, 0 AS total
-        FROM subject_tbl AS s, subject_semester AS ss, register_subject AS rs
+        FROM subject_tbl AS s, subject_semester AS ss
         WHERE s.id = ss.subjectId
-        AND rs.subjectSemesterId != ss.id
+        AND ss.id NOT IN (SELECT subjectSemesterId FROM register_subject)
         AND ss.semesterId = "'.$semester.'"';
         $result = executeResult($sql);
         $data = array('status' => 'success', 'data' => $result, 'message' => 'Tìm kiếm thành công');

@@ -161,9 +161,9 @@ $pathSidebar = 'subjects-semester';
                                                     UNION DISTINCT
                                                     SELECT ss.id, ss.subjectId, s.name, ss.semesterId, ss.lecturer, ss.room, ss.dayOfWeek,
                                                         ss.numberOfSlots, ss.startAt, ss.endAt, 0 AS total
-                                                    FROM subject_tbl AS s, subject_semester AS ss, register_subject AS rs
+                                                    FROM subject_tbl AS s, subject_semester AS ss
                                                     WHERE s.id = ss.subjectId
-                                                    AND rs.subjectSemesterId != ss.id
+                                                    AND ss.id NOT IN (SELECT subjectSemesterId FROM register_subject)
                                                     AND ss.semesterId = "' . $semester . '";';
                                             $list = executeResult($query);
                                             $index = 0;
@@ -259,6 +259,7 @@ $pathSidebar = 'subjects-semester';
     <script src="../../../../plugins/moment/moment.min.js"></script>
     <script src="../../../../plugins/bootstrap-select-1.13.14/dist/js/bootstrap-select.min.js"></script>
     <script src="../../../../plugins/bootstrap-select-1.13.14/dist/js/i18n/defaults-vi_VN.min.js"></script>
+    <script src="../../../../utils/utils.php"></script>
 
     <!-- ChartJS -->
     <script src="../../../../plugins/chart.js/Chart.min.js"></script>
@@ -360,18 +361,17 @@ $pathSidebar = 'subjects-semester';
                 let id = this.dataset.id;
                 deleteSubject(id, table.row($(this).parents('tr')));
             });
-
-            $("#semester").on('change', function() {
-                console.log("change: ");
-                searching();
-            })
         });
+
+        $("#semester").on('change', function() {
+            searching();
+        })
 
 
         function searching() {
             let q = $("#input-search").val();
             let semester = $("#semester").val();
-            console.log("semester: ", semester);
+
             q = q.trim();
             $.ajax({
                 url: 'search.php',
@@ -390,12 +390,12 @@ $pathSidebar = 'subjects-semester';
 
                             list = data.data.map((item) => {
                                 let subject = [item.id, item.subjectId, item.name, item.semesterId, item.lecturer,
-                                    item.room, item.dayOfWeek, item.startAt, item.endAt, item.numberOfSlots, '10', 'A', `
+                                    item.room, item.dayOfWeek, item.startAt, item.endAt, item.numberOfSlots, item.numberOfSlots - item.total, `
                                 <div class="text-nowrap">
-                                    <a href='form.php?id=${item.id}' target='_blank' title='Sửa môn học' class = 'btn btn-warning rounded-circle mx-2' style = 'height: 46px; padding-top: 10px'>
+                                    <a href='form.php?id=${item.id}' target='_blank' title='Sửa học phần' class = 'btn btn-warning rounded-circle mx-2' style = 'height: 46px; padding-top: 10px'>
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button title='Xóa môn học' data-id="${item.id}" class = 'btn btn-danger rounded-circle mx-2 btn-delete' style = 'min-height: 46px'>
+                                    <button title='Xóa học phần' data-id="${item.id}" class = 'btn btn-danger rounded-circle mx-2 btn-delete' style = 'min-height: 46px'>
                                         <i class="fas fa-trash-alt mx-1"></i>
                                     </button>
                                 </div>

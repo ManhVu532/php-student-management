@@ -5,6 +5,10 @@ require_once("../../../../utils/utils.php");
 if (!empty($_POST)) {
     $subjectId = $semesterId = $room = $numberOfSlots = $startAt = $endAt = $dayOfWeek = $lecturer = $id = '';
     if (isset($_POST['subjectId']) && isset($_POST['semesterId']) && isset($_POST['room']) && isset($_POST['numberOfSlots']) && isset($_POST['startAt']) && isset($_POST['endAt']) && isset($_POST['dayOfWeek']) && isset($_POST['lecturer']) && isset($_POST['id'])) {
+        if(empty($_POST['subjectId']) || empty($_POST['semesterId']) || empty($_POST['room']) || empty($_POST['numberOfSlots']) || empty($_POST['startAt']) || empty($_POST['endAt']) || empty($_POST['dayOfWeek']) || empty($_POST['lecturer']) || empty($_POST['id'])) {
+            echo json_encode(array("status" => "error", "message" => "Thiếu thông tin các trường bắt buộc"));
+            exit();
+        }
         $subjectId = validate_data($_POST['subjectId']);
         $semesterId = validate_data($_POST['semesterId']);
         $room = validate_data(strtoupper($_POST['room']));
@@ -14,11 +18,6 @@ if (!empty($_POST)) {
         $dayOfWeek = validate_data($_POST['dayOfWeek']);
         $lecturer = validate_data($_POST['lecturer']);
         $id = validate_data($_POST['id']);
-
-       if(empty($_POST['subjectId']) || empty($_POST['semesterId']) || empty($_POST['room']) || empty($_POST['numberOfSlots']) || empty($_POST['startAt']) || empty($_POST['endAt']) || empty($_POST['dayOfWeek']) || empty($_POST['lecturer']) || empty($_POST['id'])) {
-            echo json_encode(array("status" => "error", "message" => "Thiếu thông tin các trường bắt buộc"));
-            exit();
-        }
 
         $sql = 'SELECT * FROM subject_semester WHERE semesterId = "'.$semesterId.'" AND room = "'.$room.'" AND dayOfWeek = "'.$dayOfWeek.'" AND id != "'.$id.'" AND ((startAt <= "'.$startAt.'" AND endAt >= "'.$startAt.'") OR (startAt >= "'.$startAt.'" AND startAt <= "'.$endAt.'"));';
 
