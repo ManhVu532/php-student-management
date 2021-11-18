@@ -8,7 +8,7 @@ if (isset($_SESSION['user'])) {
         if ($user['type'] == 1) {
             header("Location: pages/403.php");
         }
-    }else{
+    } else {
         header("Location: pages/auth/login.php");
     }
 } else {
@@ -41,7 +41,9 @@ if (isset($_SESSION['user'])) {
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-        
+        <a href="pages/auth/logout.php" class="btn btn-outline-danger">
+            Đăng xuất
+        </a>
     </div>
     <!-- ./wrapper -->
 
@@ -69,5 +71,8 @@ if (isset($_SESSION['user'])) {
     <script src="dist/js/adminlte.min.js"></script>
     <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
 </body>
+<?php
+echo $user['firstName'];
+?>
 
 </html>
