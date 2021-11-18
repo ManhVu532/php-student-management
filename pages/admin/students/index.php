@@ -316,11 +316,13 @@ $pathSidebar = 'students';
             }).buttons().container().appendTo('.header-student_tbl');
 
             var table = $('#student_tbl').DataTable();
-            $('#subject_tbl tbody').on('click', 'button.btn-delete', function() {
+            $('#student_tbl tbody').on('click', 'button.btn-delete', function() {
+                console.log("Delete");
                 let id = this.dataset.id;
                 deleteStudent(id, table.row($(this).parents('tr')));
             });
-            $('#subject_tbl tbody').on('click', 'button.btn-reset', function() {
+            $('#student_tbl tbody').on('click', 'button.btn-reset', function() {
+                console.log("reset");
                 let id = this.dataset.id;
                 resetPassword(id);
             });
