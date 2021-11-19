@@ -1,5 +1,11 @@
 <?php
-    require_once("../utils/db_helper.php");
+require_once("../utils/db_helper.php");
+require_once("../utils/utils.php");
+session_start();
+$user = null;
+if (isset($_SESSION['user'])) {
+    $user = $_SESSION['user'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -63,8 +69,8 @@
     <nav class="navbar-menu sticky-top navbar navbar-expand-lg navbar-light bg-light py-0 shadow">
         <div class="container">
             <button class="navbar-toggler border-dark my-2" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fas fa-bars text-white"></i>
-        </button>
+                <i class="fas fa-bars text-white"></i>
+            </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="position-relative py-1 d-flex justify-content-between flex-grow-1">
@@ -74,8 +80,8 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white py-2 px-4 rounded text-center mx-1" href="./pages/introductions/index.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Giới thiệu
-                        </a>
+                                Giới thiệu
+                            </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item text-red" href="./pages/introductions/index.html">Lịch sử - Truyền thống</a>
                                 <a class="dropdown-item text-red" href="./pages/introductions/misson.html">Tầm nhìn - Sứ mệnh</a>
@@ -84,8 +90,8 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white py-2 px-4 rounded text-center mx-1" href="./pages/news/index.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Tin tức
-                        </a>
+                                Tin tức
+                            </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item text-red" href="./pages/news/index.html">Sự kiện</a>
                                 <a class="dropdown-item text-red" href="./pages/news/notify.html">Thông báo</a>
@@ -93,8 +99,8 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white py-2 px-4 rounded text-center mx-1" href="./pages/majors/index.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Ngành học
-                        </a>
+                                Ngành học
+                            </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item text-red" href="./pages/majors/index.html">Công nghệ thông tin</a>
                                 <a class="dropdown-item text-red" href="./pages/majors/index.html">Đa phương tiện</a>
@@ -115,7 +121,7 @@
                             <a class="nav-link text-white py-2 px-4  mx-1 rounded text-center" href="./pages/contact.html">Liên hệ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white py-2 px-4  mx-1 rounded text-center" href="<?=HOST."pages/auth/login.php"?>">Đăng nhập</a>
+                            <a class="nav-link text-white py-2 px-4  mx-1 rounded text-center <?=($user == null) ? '' : "d-none"?>" href="<?= HOST . "pages/auth/login.php" ?>">Đăng nhập</a>
                         </li>
                     </ul>
                     <a class="search py-2 px-3 rounded" href="#">
@@ -187,7 +193,7 @@
                             5★
                         </p>
                         <p class="reasons_desc text-uppercase text-black">
-                            CHẤT LƯỢNG <br/> ĐÀO TẠO
+                            CHẤT LƯỢNG <br /> ĐÀO TẠO
                         </p>
                     </div>
                     <div class="col-lg-3 col-md-6">
@@ -195,7 +201,7 @@
                             top <span class="display-3">5</span>
                         </p>
                         <p class="reasons_desc text-uppercase text-black">
-                            Công nghệ thông tin <br/> tốt nhất Việt Nam
+                            Công nghệ thông tin <br /> tốt nhất Việt Nam
                         </p>
                     </div>
                     <div class="col-lg-3 col-md-6">
@@ -203,15 +209,15 @@
                             98%
                         </p>
                         <p class="reasons_desc text-uppercase text-black">
-                            Sinh viên có <br/> việc làm ngay
+                            Sinh viên có <br /> việc làm ngay
                         </p>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <p class="reasons__title text-uppercase display-3 d-flex justify-content-center align-items-center">
-                            8.5 <span class="display-6">Triệu đồng/<br/>Tháng</span>
+                            8.5 <span class="display-6">Triệu đồng/<br />Tháng</span>
                         </p>
                         <p class="reasons_desc text-uppercase text-black">
-                            Sinh viên có <br/> việc làm ngay
+                            Sinh viên có <br /> việc làm ngay
                         </p>
                     </div>
                 </div>
@@ -284,7 +290,7 @@
             </div>
         </section>
         <div class="container">
-            <hr/>
+            <hr />
         </div>
 
         <!-- Section 4 -->
@@ -298,43 +304,43 @@
                 </h3>
                 <div class="row mt-4" data-aos="fade-up">
                     <?php
-                        $sql = "SELECT * FROM `user_tbl` WHERE `type` = 0 AND `isActive` = 1 LIMIT 3";
-                        $users = executeResult($sql);
+                    $sql = "SELECT * FROM `user_tbl` WHERE `type` = 0 AND `isActive` = 1 LIMIT 3";
+                    $users = executeResult($sql);
 
-                        if(count($users) == 0){
-                            echo '<h3 class="text-center">Không tìm thấy thông tin sinh viên nào</h3>';
-                        }else{
-                            foreach($users as $user){
-                                $user_name = $user['lastName']." ".$user['firstName'];
-                                $user_avatar = $user['avatar'];
-                                if(empty($user_avatar) || !$user_avatar){
-                                    $user_avatar = HOST.'university/assets/images/avatar.jpeg';
-                                }else{
-                                    $user_avatar = HOST.$user_avatar;
-                                }
-                                $user_id = $user['id'];
+                    if (count($users) == 0) {
+                        echo '<h3 class="text-center">Không tìm thấy thông tin sinh viên nào</h3>';
+                    } else {
+                        foreach ($users as $user) {
+                            $user_name = $user['lastName'] . " " . $user['firstName'];
+                            $user_avatar = $user['avatar'];
+                            if (empty($user_avatar) || !$user_avatar) {
+                                $user_avatar = HOST . 'university/assets/images/avatar.jpeg';
+                            } else {
+                                $user_avatar = HOST . $user_avatar;
+                            }
+                            $user_id = $user['id'];
 
-                                echo '
+                            echo '
                                         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
                                             <div class="lecturers__card bg-white d-flex flex-column align-items-center rounded-lg shadow-sm p-3 pt-5">
                                                 <a href="#" class="card-220 card-lg-220 card-md-160 rounded-circle overflow-hidden bg-light">
-                                                    <img src="'.$user_avatar.'" class="card-img-top" alt="...">
+                                                    <img src="' . $user_avatar . '" class="card-img-top" alt="...">
                                                 </a>
                                                 <div class="mt-3">
-                                                    <h6 class="text-center mb-0 font-family-bold">'.$user_name.'</h6>
-                                                    <p class="text-center text-black-50 text-desc mb-0">'.$user_id.'</p>
+                                                    <h6 class="text-center mb-0 font-family-bold">' . $user_name . '</h6>
+                                                    <p class="text-center text-black-50 text-desc mb-0">' . $user_id . '</p>
                                                 </div>
                                             </div>
                                         </div>
                                 ';
-                             }
                         }
+                    }
                     ?>
                 </div>
             </div>
         </section>
         <div class="container">
-            <hr/>
+            <hr />
         </div>
         <!-- Section 5 -->
         <!-- News -->
@@ -361,7 +367,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <a href="./pages/news/event-details.html" class="text-black text-decoration-none">
-                                    Sinh viên PTIT nhận được sự quan tâm lớn của cộng đồng doanh nghiệp số
+                                        Sinh viên PTIT nhận được sự quan tâm lớn của cộng đồng doanh nghiệp số
                                     </a>
                                 </h5>
                                 <small class="text-mute text-black-50">26/20/2021</small>
@@ -403,7 +409,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <a href="./pages/news/event-details.html" class="text-black text-decoration-none">
-                                    Năm học mới đặc biệt của Học viện Công nghệ Bưu chính Viễn thông
+                                        Năm học mới đặc biệt của Học viện Công nghệ Bưu chính Viễn thông
                                     </a>
                                 </h5>
                                 <small class="text-mute text-black-50">21/20/2021</small>
@@ -468,7 +474,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <a href="./pages/news/event-details.html" class="text-black text-decoration-none">
-                                    Thư chúc mừng 24 năm ngày truyền thống Học viện Công nghệ Bưu chính Viễn thông (17/9/1997 – 17/9/2021)
+                                        Thư chúc mừng 24 năm ngày truyền thống Học viện Công nghệ Bưu chính Viễn thông (17/9/1997 – 17/9/2021)
                                     </a>
                                 </h5>
                                 <small class="text-mute text-black-50">15/09/2021</small>
@@ -482,7 +488,7 @@
                 </div>
         </section>
         <div class="container">
-            <hr/>
+            <hr />
         </div>
         <!-- Section 6-->
         <!-- Notification program -->
@@ -533,7 +539,7 @@
                             <div class="card-body">
                                 <p class="card-text">
                                     <a href="./pages/news/notify-details.html" class="notify__link text-black text-decoration-none font-family-bold">
-                                    Thông báo điểm chuẩn xét trúng tuyển đại học theo hình thức vừa làm vừa học Đợt 1 năm 2021
+                                        Thông báo điểm chuẩn xét trúng tuyển đại học theo hình thức vừa làm vừa học Đợt 1 năm 2021
                                     </a>
                                 </p>
                             </div>
@@ -562,7 +568,7 @@
         </section>
 
         <div class="container">
-            <hr/>
+            <hr />
         </div>
         <!-- Section7 -->
 
@@ -613,181 +619,181 @@
                 </div>
             </div>
         </section>
-        </div>
-        <!-- back to top button-->
-        <div class="back-to-top d-flex align-items-center justify-content-center rounded shadow-sm">
-            <i class="fas fa-angle-up"></i>
-        </div>
+    </div>
+    <!-- back to top button-->
+    <div class="back-to-top d-flex align-items-center justify-content-center rounded shadow-sm">
+        <i class="fas fa-angle-up"></i>
+    </div>
 
-        <!-- Model signup advise -->
+    <!-- Model signup advise -->
 
-        <!-- Button trigger modal -->
-        <button type="button" class="signup-button position-fixed text-white shadow-sm" data-toggle="modal" data-target="#staticBackdrop">
-            <i class="fas fa-edit"></i> 
-            <span class="text-nowrap">
-             Đăng ký tư vấn
-            </span>
-        </button>
+    <!-- Button trigger modal -->
+    <button type="button" class="signup-button position-fixed text-white shadow-sm" data-toggle="modal" data-target="#staticBackdrop">
+        <i class="fas fa-edit"></i>
+        <span class="text-nowrap">
+            Đăng ký tư vấn
+        </span>
+    </button>
 
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content bg-red text-white">
-                    <div class="modal-header">
-                        <h5 class="modal-title font-family-bold" id="staticBackdropLabel">Đăng ký để nhận tư vấn tuyển sinh miễn phí</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i class="fas fa-times text-white"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label for="name">Họ và tên*</label>
-                                    <input type="text" placeholder="Họ và tên" class="form-control" id="name">
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label for="phone">Điện thoại*</label>
-                                    <input type="text" placeholder="Điện thoại" class="form-control" id="phone">
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label for="phone">Ngày sinh</label>
-                                    <input type="date" placeholder="Ngày sinh" class="form-control" id="phone">
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" placeholder="Email" class="form-control" id="email">
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label for="school">Trường THPT/ Đại học</label>
-                                    <input type="text" placeholder="Trường THPT/ Đại học" class="form-control" id="school">
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label for="province">Tỉnh/ Thành phố*</label>
-                                    <input type="text" placeholder="Tỉnh/ Thành phố" class="form-control" id="province">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                        <button type="button" class="btn btn-danger" id="signup-advised" data-dismiss="modal">Đăng ký</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- footer -->
-        <section class="footer bg-white shadow-lg pt-3 pb-5 border-bottom-red">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 mt-2 mb-4">
-                        <p class="text-center display-5 font-family-bold">
-                            HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG
-                        </p>
-                    </div>
-                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12"></div>
-                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 footer__column mb-4">
-                        <div class="footer__column-one d-flex align-items-center flex-column">
-                            <div>
-                                <img src="assets/images/ptit-logo.png" alt="logo" />
-                            </div>
-                            <div class="mt-4 d-flex justify-content-around w-100 mb-3">
-                                <a href="#" class="icon-footer rounded-circle bg-light d-flex justify-content-center align-items-center">
-                                    <i class="fab fa-facebook-square"></i>
-                                </a>
-                                <a href="#" class="icon-footer rounded-circle bg-light d-flex justify-content-center align-items-center">
-                                    <i class="fab fa-youtube"></i>
-                                </a>
-                                <a href="#" class="icon-footer rounded-circle bg-light d-flex justify-content-center align-items-center">
-                                    <i class="fab fa-google-plus"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 footer__column mb-4">
-                        <div class="footer__column--two">
-                            <h5 class="display-6 text-red font-family-bold">
-                                Trụ sở chính:
-                            </h5>
-                            <p>
-                                122 Hoàng Quốc Việt, Q.Cầu Giấy, Hà Nội.
-                            </p>
-                            <h5 class="display-6 text-red font-family-bold">
-                                Cơ sở đào tạo tại Hà Nội:
-                            </h5>
-                            <p>
-                                Km10, Đường Nguyễn Trãi, Q.Hà Đông, Hà Nội
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 footer__column mb-4">
-                        <div class="footer__column--two">
-                            <h5 class="display-6 text-red font-family-bold">
-                                Học viện cơ sở tại TP. Hồ Chí Minh:
-                            </h5>
-                            <p>
-                                122 Hoàng Quốc Việt, Q.Cầu Giấy, Hà Nội.11 Nguyễn Đình Chiểu, P. Đa Kao, Q.1 TP Hồ Chí Minh
-                            </p>
-                            <h5 class="display-6 text-red font-family-bold">
-                                Cơ sở đào tạo tại TP Hồ Chí Minh:
-                            </h5>
-                            <p>
-                                Đường Man Thiện, P. Hiệp Phú, Q.9 TP Hồ Chí Minh
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 footer__column mb-4">
-                        <h5 class="display-6 text-red font-family-bold">
-                            Địa chỉ:
-                        </h5>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6184.594910678308!2d105.78332901342435!3d20.97310420111682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135acce762c2bb9%3A0xbb64e14683ccd786!2zSOG7jWMgVmnhu4duIENOIELGsHUgQ2jDrW5oIFZp4buFbiBUaMO0bmcgLSBIw6AgxJDDtG5n!5e0!3m2!1svi!2s!4v1635313100919!5m2!1svi!2s"
-                            style="border:0;" allowfullscreen="" loading="lazy"></iframe></div>
-                </div>
-            </div>
-        </section>
-
-        <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 9999; right: 0; bottom: 0;">
-            <div id="liveToast" class="toast hide text-white" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
-                <div class="toast-header d-flex justify-content-between">
-                    <div>
-                        <i class="fas fa-check-circle text-success"></i>
-                        <strong class="mx-3">PTIT</strong>
-                        <small>Vừa xong</small>
-                    </div>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-red text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title font-family-bold" id="staticBackdropLabel">Đăng ký để nhận tư vấn tuyển sinh miễn phí</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times text-white"></i>
                     </button>
                 </div>
-                <div class="toast-body bg-red">
-                    Đăng ký của bạn đã được gửi đi!
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="name">Họ và tên*</label>
+                                <input type="text" placeholder="Họ và tên" class="form-control" id="name">
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="phone">Điện thoại*</label>
+                                <input type="text" placeholder="Điện thoại" class="form-control" id="phone">
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="phone">Ngày sinh</label>
+                                <input type="date" placeholder="Ngày sinh" class="form-control" id="phone">
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" placeholder="Email" class="form-control" id="email">
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="school">Trường THPT/ Đại học</label>
+                                <input type="text" placeholder="Trường THPT/ Đại học" class="form-control" id="school">
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="province">Tỉnh/ Thành phố*</label>
+                                <input type="text" placeholder="Tỉnh/ Thành phố" class="form-control" id="province">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="signup-advised" data-dismiss="modal">Đăng ký</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Bootstrap core JavaScript and Jquery -->
-        <script src="assets/vendor/bootstrap-4.6.0-dist/js/jquery-3.6.0.min.js"></script>
-        <script src="/assets/vendor/bootstrap-4.6.0-dist/js/popper.min.js"></script>
-        <script src="assets/vendor/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js"></script>
+    <!-- footer -->
+    <section class="footer bg-white shadow-lg pt-3 pb-5 border-bottom-red">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 mt-2 mb-4">
+                    <p class="text-center display-5 font-family-bold">
+                        HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG
+                    </p>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12"></div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 footer__column mb-4">
+                    <div class="footer__column-one d-flex align-items-center flex-column">
+                        <div>
+                            <img src="assets/images/ptit-logo.png" alt="logo" />
+                        </div>
+                        <div class="mt-4 d-flex justify-content-around w-100 mb-3">
+                            <a href="#" class="icon-footer rounded-circle bg-light d-flex justify-content-center align-items-center">
+                                <i class="fab fa-facebook-square"></i>
+                            </a>
+                            <a href="#" class="icon-footer rounded-circle bg-light d-flex justify-content-center align-items-center">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                            <a href="#" class="icon-footer rounded-circle bg-light d-flex justify-content-center align-items-center">
+                                <i class="fab fa-google-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 footer__column mb-4">
+                    <div class="footer__column--two">
+                        <h5 class="display-6 text-red font-family-bold">
+                            Trụ sở chính:
+                        </h5>
+                        <p>
+                            122 Hoàng Quốc Việt, Q.Cầu Giấy, Hà Nội.
+                        </p>
+                        <h5 class="display-6 text-red font-family-bold">
+                            Cơ sở đào tạo tại Hà Nội:
+                        </h5>
+                        <p>
+                            Km10, Đường Nguyễn Trãi, Q.Hà Đông, Hà Nội
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 footer__column mb-4">
+                    <div class="footer__column--two">
+                        <h5 class="display-6 text-red font-family-bold">
+                            Học viện cơ sở tại TP. Hồ Chí Minh:
+                        </h5>
+                        <p>
+                            122 Hoàng Quốc Việt, Q.Cầu Giấy, Hà Nội.11 Nguyễn Đình Chiểu, P. Đa Kao, Q.1 TP Hồ Chí Minh
+                        </p>
+                        <h5 class="display-6 text-red font-family-bold">
+                            Cơ sở đào tạo tại TP Hồ Chí Minh:
+                        </h5>
+                        <p>
+                            Đường Man Thiện, P. Hiệp Phú, Q.9 TP Hồ Chí Minh
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 footer__column mb-4">
+                    <h5 class="display-6 text-red font-family-bold">
+                        Địa chỉ:
+                    </h5>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6184.594910678308!2d105.78332901342435!3d20.97310420111682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135acce762c2bb9%3A0xbb64e14683ccd786!2zSOG7jWMgVmnhu4duIENOIELGsHUgQ2jDrW5oIFZp4buFbiBUaMO0bmcgLSBIw6AgxJDDtG5n!5e0!3m2!1svi!2s!4v1635313100919!5m2!1svi!2s" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <!-- External js files -->
-        <script src="assets/js/main.js"></script>
+    <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 9999; right: 0; bottom: 0;">
+        <div id="liveToast" class="toast hide text-white" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+            <div class="toast-header d-flex justify-content-between">
+                <div>
+                    <i class="fas fa-check-circle text-success"></i>
+                    <strong class="mx-3">PTIT</strong>
+                    <small>Vừa xong</small>
+                </div>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body bg-red">
+                Đăng ký của bạn đã được gửi đi!
+            </div>
+        </div>
+    </div>
 
-        <!-- AOS initial -->
-        <script src="assets/vendor/aos.js"></script>
-        <script>
-            AOS.init();
-        </script>
+    <!-- Bootstrap core JavaScript and Jquery -->
+    <script src="assets/vendor/bootstrap-4.6.0-dist/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendor/bootstrap-4.6.0-dist/js/popper.min.js"></script>
+    <script src="assets/vendor/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- External js files -->
+    <script src="assets/js/main.js"></script>
+
+    <!-- AOS initial -->
+    <script src="assets/vendor/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
 </body>
 
 </html>

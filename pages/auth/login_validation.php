@@ -39,7 +39,8 @@
                 echo json_encode(array('status' => 'error', 'message' => 'Mật khẩu không chính xác'));
             }else{
                 $_SESSION['user'] = json_encode($user);
-                if($remember == 'true' || $remember == true){
+                
+                if($remember == 'true'){
                     setcookie('user', json_encode(array('username' => $username, 'password' => $password, 'remember' => $remember)), time() + EXPRIED_TIME_COOKIE);
                 }else{
                     if (isset($_COOKIE['user'])) {
@@ -49,9 +50,11 @@
                 }
                 
                 echo json_encode(array('status' => 'success', 'message' => 'Đăng nhật thành công', 'user' => $user, 'remember' => $remember));
+                exit();
             }
         }
     }else{
         echo json_encode(array('status' => 'error', 'message' => 'Đăng nhập thất bại'));
+        exit();
     }
 ?>

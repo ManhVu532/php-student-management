@@ -41,6 +41,8 @@ if (!empty($_POST)) {
             echo json_encode(array("status" => "error", "message" => "Email đã tồn tại"));
             exit();
         }
+        }else{
+            $email = null;
         }
 
         if(!empty($phoneNumber)){
@@ -55,11 +57,12 @@ if (!empty($_POST)) {
                 echo json_encode(array("status" => "error", "message" => "Số điện thoại đã tồn tại"));
                 exit();
             }
+        }else{
+            $phoneNumber = null;
         }
-
-        $query = "UPDATE user_tbl SET firstName = '$firstName', lastName = '$lastName', email = '$email', dob = STR_TO_DATE('" . $dob . "', '%Y-%m-%d'), `address`= '$address', classId = '$classId', gender = '$gender', isActive = '$isActive', phoneNumber = '$phoneNumber', email = '$email', updateAt=CURRENT_TIMESTAMP WHERE id = '$id';";
+        $query = "UPDATE user_tbl SET firstName = '$firstName', lastName = '$lastName', email = '$email', dob = STR_TO_DATE('" . $dob . "', '%Y-%m-%d'), `address`= '$address', classId = '$classId', gender = '$gender', isActive = '$isActive', phoneNumber = ".($phoneNumber == null ? "NULL" : "'".$phoneNumber."'").", email = ".($email == null ? "NULL" : "'".$email."'").", updateAt=CURRENT_TIMESTAMP WHERE id = '$id';";
 
         executeQuery($query);
-        echo json_encode(array("status" => "success", "message" => "Cập nhật thành công"));
+        echo json_encode(array("status" => "success", "message" => "Cập nhật thành công "));
     }
 }

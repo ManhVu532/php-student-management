@@ -126,7 +126,7 @@ $pathSidebar = 'schedules';
                                     <table id="schedule_tbl" class="w-100 table table-bordered table-striped">
                                         <thead>
                                             <tr class="bg-dark">
-                                                <th>STT</th>
+                                                <th>Nhóm</th>
                                                 <th>Mã môn học</th>
                                                 <th>Tên môn học</th>
                                                 <th>Ngày thi</th>
@@ -160,7 +160,6 @@ $pathSidebar = 'schedules';
                                             $list = executeResult($query);
                                             $index = 0;
                                             foreach ($list as $item) {
-                                                $index++;
                                                 $date_format = '';
                                                 $time_format = '';
                                                 if ($item['examAt']) {
@@ -170,7 +169,7 @@ $pathSidebar = 'schedules';
                                                     $time_format = $time_format->format("H:i");
                                                 }
                                                 echo "<tr>";
-                                                echo "<td>$index</td>";
+                                                echo "<td>" . $item['id'] . "</td>";
                                                 echo "<td>" . $item['subjectId'] . "</td>";
                                                 echo "<td>" . $item['name'] . "</td>";
                                                 echo "<td>" . $date_format . "</td>";
@@ -196,7 +195,7 @@ $pathSidebar = 'schedules';
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th>STT</th>
+                                                <th>Nhóm</th>
                                                 <th>Mã môn học</th>
                                                 <th>Tên môn học</th>
                                                 <th>Ngày thi</th>
@@ -381,14 +380,14 @@ $pathSidebar = 'schedules';
                         var table = $('#schedule_tbl').DataTable();
                         table.clear().draw();
                         if (data.data.length > 0) {
-                            data.data.map((item, index) => {
+                            data.data.map((item) => {
                                 let date = moment(item.examAt, 'YYYY-MM-DD hh:mm:ss');
                                 let schedule = [
-                                    index + 1,
+                                    item.id,
                                     item.subjectId,
                                     item.name,
                                     date.format('DD/MM/YYYY') != 'Invalid date' ? date.format('DD/MM/YYYY') : '',
-                                    date.format('hh:mm') != 'Invalid date' ? date.format('hh:mm') : '',
+                                    date.format('HH:mm') != 'Invalid date' ? date.format('HH:mm') : '',
                                     item.roomExam,
                                     item.totalTime,
                                     item.examType,
