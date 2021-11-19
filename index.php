@@ -15,6 +15,7 @@ if (isset($_SESSION['user'])) {
 } else {
     header("Location: pages/auth/login.php");
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -50,6 +51,13 @@ if (isset($_SESSION['user'])) {
         * {
             scroll-behavior: smooth;
         }
+
+        .nav-link:hover{
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .nav-link{
+            min-width: 120px;
+        }
     </style>
 </head>
 
@@ -67,17 +75,17 @@ if (isset($_SESSION['user'])) {
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav justify-content-between w-100 d-flex">
-                        <a class="nav-link text-white text-bold active" href="#home">Trang chủ<span class="sr-only">(current)</span></a>
-                        <a class="nav-link text-white  text-bold " href="#info">TT Cá nhân</a>
-                        <a class="nav-link text-white  text-bold " href="#score">Điểm</a>
-                        <a class="nav-link text-white  text-bold " href="#schedule">Lịch thi</a>
-                        <a class="nav-link text-white  text-bold " href="#fee">Học phí</a>
-                        <a class="nav-link text-white  text-bold " href="pages/auth/logout.php">Đăng xuất</a>
+                        <a class="nav-link text-white rounded-lg text-center text-bold ml-2" href="#home">Trang chủ<span class="sr-only">(current)</span></a>
+                        <a class="nav-link text-white rounded-lg text-center text-bold " href="#info">TT Cá nhân</a>
+                        <a class="nav-link text-white rounded-lg text-center text-bold " href="#score">Điểm</a>
+                        <a class="nav-link text-white rounded-lg text-center text-bold " href="#schedule">Lịch thi</a>
+                        <a class="nav-link text-white rounded-lg text-center text-bold " href="#fee">Học phí</a>
+                        <a class="nav-link text-white rounded-lg text-center text-bold " href="pages/auth/logout.php">Đăng xuất</a>
                     </div>
                 </div>
                 <!-- avatar in the navbar -->
                 <div class="avatar-wrapper d-flex align-items-center ml-3" style="cursor: pointer">
-                    <div class="profile-img rounded-circle overflow-hidden" style="width: 48px">
+                    <div class="profile-img rounded-circle overflow-hidden d-flex aligin-items-center justify-content-center" style="width: 48px; height: 48px">
                         <img src="<?= $user['avatar'] ? HOST . $user['avatar'] : 'university/assets/images/avatar.jpeg' ?>" alt="avatar" class="w-100" />
                     </div>
                     <div class="profile-text text-white">
@@ -239,13 +247,13 @@ if (isset($_SESSION['user'])) {
                                         <div class="col-md-12">
                                             <div class="user-info-wrapper">
                                                 <div class="user-info">
-                                                    <form class="row">
+                                                    <form class="row" onsubmit="return false;">
                                                         <div class="form-group text--center d-flex flex-column align-items-center col-12">
-                                                            <label for="avatar">Ảnh đại diện</label>
+                                                            <label for="avatar" class="display-5">Ảnh đại diện</label>
                                                             <input type="file" class="form-control-file" id="avatar" name="avatar" hidden="true">
                                                             <!-- avatar circle -->
-                                                            <div class="avatar-wrapper">
-                                                                <div class="profile-img rounded-circle overflow-hidden" style="width:240px">
+                                                            <div id="avatar-image" class="avatar-wrapper" style="cursor: pointer">
+                                                                <div class="profile-img rounded-circle overflow-hidden elevation-2 d-flex aligin-items-center justify-content-center" style="width:240px; height: 240px">
                                                                     <img src="<?= $user['avatar'] ? HOST . $user['avatar'] : 'university/assets/images/avatar.jpeg' ?>" alt="avatar" class="w-100" />
                                                                 </div>
                                                             </div>
@@ -253,30 +261,18 @@ if (isset($_SESSION['user'])) {
                                                         <div class="form-group col-lg-6 col-sm-12">
                                                             <label for="firstName">Tên*</label>
                                                             <input type="text" class="form-control" id="firstName" placeholder="Nhập tên" value="<?= $user['firstName'] ?>" required>
-                                                            <div id="firstName-validate" class="alert alert-danger mt-1 d-none" role="alert">
-                                                                Họ tên không được trống!
-                                                            </div>
                                                         </div>
                                                         <div class="form-group col-lg-6 col-sm-12">
                                                             <label for="lastName">Họ*</label>
                                                             <input type="text" class="form-control" id="lastName" placeholder="Nhập họ" value="<?= $user['lastName'] ?>" required>
-                                                            <div id="lastName-validate" class="alert alert-danger mt-1 d-none" role="alert">
-                                                                Họ tên không được trống!
-                                                            </div>
                                                         </div>
                                                         <div class="form-group col-lg-6 col-sm-12">
                                                             <label for="email">Địa chỉ email</label>
                                                             <input type="email" class="form-control" id="email" placeholder="Nhập địa chỉ email" value="<?= $user['email'] ?>">
-                                                            <div id="email-validate" class="alert alert-danger mt-1 d-none" role="alert">
-                                                                Email đã tồn tại!
-                                                            </div>
                                                         </div>
                                                         <div class="form-group col-lg-6 col-sm-12">
                                                             <label for="phoneNumber">Số điện thoại</label>
                                                             <input type="text" class="form-control" id="phoneNumber" placeholder="Nhập số điện thoại" value="<?= $user['phoneNumber'] ?>">
-                                                            <div id="phoneNumber-validate" class="alert alert-danger mt-1 d-none" role="alert">
-                                                                Số điện thoại đã tồn tại!
-                                                            </div>
                                                         </div>
                                                         <div class="form-group col-lg-6 col-sm-12">
                                                             <label for="address">Địa chỉ</label>
@@ -284,7 +280,15 @@ if (isset($_SESSION['user'])) {
                                                         </div>
                                                         <div class="form-group col-lg-6 col-sm-12">
                                                             <label for="dob">Ngày sinh</label>
-                                                            <input type="date" class="form-control" id="dob" placeholder="Nhập ngày sinh" format="DD/MM/YYYY" value="<?= $user['dob'] ?>">
+                                                            <?php
+                                                            $dob = '';
+                                                                if ($user['dob']) {
+                                                                    $date = $user['dob'];
+                                                                    $date_format = DateTime::createFromFormat("Y-m-d H:i:s",  $date);
+                                                                    $dob = $date_format->format("Y-m-d");
+                                                                }
+                                                            ?>
+                                                            <input type="date" class="form-control" id="dob" placeholder="Nhập ngày sinh" format="DD/MM/YYYY" value="<?= $dob ?>">
                                                         </div>
                                                         <div class="form-group col-lg-6 col-sm-12">
                                                             <div>
@@ -302,7 +306,7 @@ if (isset($_SESSION['user'])) {
                                                         </div>
                                                         <div class="col-12 mt-4">
                                                             <div>
-                                                                <button type="submit" class="btn btn-outline-danger">Cập nhật</button>
+                                                                <button type="submit" id="update-info" class="btn btn-outline-danger">Cập nhật</button>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -1186,6 +1190,186 @@ if (isset($_SESSION['user'])) {
                 }
             });
         });
+
+        $("#avatar-image").on("click", function() {
+            $("#avatar").click();
+        });
+
+        $().ready(function() {
+            $('#avatar').on('change', function() {
+                var file = $('#avatar').prop('files')[0];
+                var form_data = new FormData();
+                form_data.append('file', file);
+
+                $.ajax({
+                    url: 'users/upload.php',
+                    type: 'POST',
+                    data: form_data,
+                    dataType: 'JSON',
+                    contentType: false,
+                    processData: false,
+                    beforeSend: () => {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Đang tải lên...',
+                            allowOutsideClick: false,
+                            showCancelButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                        })
+                    },
+                    success: function(data) {
+                        console.log("data: ", data);
+                        if (data.status == 'success') {
+                            Swal.fire({
+                                    icon: 'success',
+                                    title: 'Tải lên thành công',
+                                })
+                                .then(res => {
+                                    Swal.fire({
+                                            icon: 'info',
+                                            title: 'Thông báo',
+                                            text: 'Bạn có chắc chắn muốn đổi ảnh đại diện không?',
+                                            showConfirmButton: true,
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Có',
+                                            cancelButtonText: 'Không',
+                                        })
+                                        .then(res => {
+                                            if (res.value) {
+                                                updateAvatar(data.data);
+                                            }
+                                        })
+                                })
+
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: data.message,
+                            });
+                        }
+                    }
+                })
+            });
+        });
+
+        function updateAvatar(url) {
+            $.ajax({
+                url: 'users/update_avatar.php',
+                type: 'POST',
+                data: {
+                    avatar: url,
+                    id: '<?= $user['id'] ?>'
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    console.log("data: ", data);
+                    if (data.status == 'success') {
+                        Swal.fire({
+                                icon: 'success',
+                                title: 'Cập nhật thành công',
+                            })
+                            .then(res => {
+                                location.reload();
+                            })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: data.message,
+                        });
+                    }
+                }
+            })
+        }
+
+        $('#update-info').click(function(e) {
+            console.log("clicked");
+            e.preventDefault();
+            let firstName = $('#firstName').val().trim();
+            let lastName = $('#lastName').val().trim();
+            let email = $('#email').val().trim();
+            let phoneNumber = $('#phoneNumber').val().trim();
+            let address = $('#address').val().trim();
+            let dob = $('#dob').val();
+            let gender = $('#gender').val();
+            let id = "<?= $user['id'] ?>";
+
+            if(!id || !firstName || !lastName || firstName.length == 0  || lastName.length == 0){
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Thông báo',
+                    text: 'Vui lòng nhập đầy đủ thông tin!',
+                })
+                return;
+            }
+
+            Swal.fire({
+                title: `Bạn có chắc chắn muốn cập nhật thông tin của mình?`,
+                text: "Bạn sẽ không thể khôi phục lại dữ liệu này!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có, cập nhật ngay!'
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire({
+                        html: `
+                        <form class="form-inline">
+                            <label for="confirm-password-verify">Mật khẩu:</label>
+                            <input class="form-control flex-grow-1 ml-2" id="confirm-password-verify" type="password" placeholder="Nhập mật khẩu của bạn"/>
+                        </form>
+                        `,
+                        icon: 'warning',
+                        title: 'Xác nhận mật khẩu!',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Xác nhận!',
+                        cancelButtonText: 'Hủy',
+                    }).then(result => {
+                        if (result.value) {
+                            let password = $("#confirm-password-verify").val().trim();
+                            $.ajax({
+                                url: 'users/update.php',
+                                method: 'POST',
+                                dataType: 'JSON',
+                                data: {
+                                    'id': id,
+                                    'firstName': firstName,
+                                    'lastName': lastName,
+                                    'email': email,
+                                    'phoneNumber': phoneNumber,
+                                    'address': address,
+                                    'dob': dob,
+                                    'gender': gender,
+                                    'password': password
+                                },
+                                success: function(data) {
+                                    if (data.status == 'success') {
+                                        Swal.fire({
+                                            title: 'Thành công',
+                                            text: data.message,
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Thất bại',
+                                            text: data.message,
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        })
     </script>
 </body>
 

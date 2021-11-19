@@ -16,13 +16,14 @@ if (!empty($_POST)) {
         $dob = validate_data($_POST['dob']);
         $address = validate_data($_POST['address']);
         $password = validate_data($_POST['password']);
+        $id = validate_data($_POST['id']);
         if(empty($firstName) || empty($lastName) || empty($id)){
-            echo json_encode(array("status" => "error", "message" => "Thiếu thông tin các trường bắt buộc"));
+            echo json_encode(array("status" => "error", "message" => "Thiếu thông tin các trường bắt buộc A"));
             exit();
         }
 
         if(empty($password)){
-            echo json_encode(array("status" => "error", "message" => "Thiếu thông tin các trường bắt buộc"));
+            echo json_encode(array("status" => "error", "message" => "Thiếu thông tin các trường bắt buộc B".$password));
             exit();
         }
 
@@ -32,11 +33,11 @@ if (!empty($_POST)) {
                 exit();
             }
             $sql = "SELECT * FROM user_tbl WHERE email = '$email' AND id != '$id';";
-        $result = executeResult($sql);
-        if (count($result) > 0) {
-            echo json_encode(array("status" => "error", "message" => "Email đã tồn tại"));
-            exit();
-        }
+            $result = executeResult($sql);
+            if (count($result) > 0) {
+                echo json_encode(array("status" => "error", "message" => "Email đã tồn tại"));
+                exit();
+            }
         }else{
             $email = null;
         }
@@ -69,18 +70,14 @@ if (!empty($_POST)) {
             exit();
         }
         $query = "UPDATE user_tbl SET firstName = '$firstName', lastName = '$lastName', email = '$email', dob = STR_TO_DATE('" . $dob . "', '%Y-%m-%d'), `address`= '$address', gender = '$gender',  phoneNumber = ".($phoneNumber == null ? "NULL" : "'".$phoneNumber."'").", email = ".($email == null ? "NULL" : "'".$email."'").", updateAt=CURRENT_TIMESTAMP WHERE id = '$id';";
-        executeQuery($query);
-        $user = json_decode($_SESSION['user']);
-        $user['firstname'] = $firstName;
-        $user['lastname'] = $lastName;
-        $user['email'] = $email;
-        $user['dob'] = $dob;
-        $user['address'] = $address;
-        $user['phoneNumber'] = $phoneNumber;
-        $user['address'] = $address;
-        $user['gender'] = $gender;
 
-        $_SESSION['user'] = json_encode($user);
+        executeQuery($query);
+
+        $sql = "SELECT * FROM user_tbl WHERE id = '$id'";
+        $result = executeResult($sql);
+
+        $_SESSION['user'] = json_encode($result[0]);
         echo json_encode(array("status" => "success", "message" => "Cập nhật thành công"));
+        exit();
     }
 }
