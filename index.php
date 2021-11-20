@@ -1050,7 +1050,7 @@ if (isset($_SESSION['user'])) {
                         let listFee = response.data.listFee;
                         let totalCredits = response.data.totalCredits ?? 0;
                         let totalFee = response.data.totalFee ?? 0;
-                        let totalFeePaid = response.data.totalFeePaid ?? 0;
+                        let amountPaid = response.data.amountPaid ?? 0;
                         let remain = response.data.remain ?? 0;
                         table.clear().draw();
                         listFee.map((item, index) => {
@@ -1065,7 +1065,7 @@ if (isset($_SESSION['user'])) {
 
                         $("#totalCredits").text(totalCredits);
                         $("#totalFee").text(totalFee);
-                        $("#totalFeePaid").text(totalFeePaid);
+                        $("#amountPaid").text(amountPaid);
                         $("#remain").text(remain);
                     } else {
                         table.clear().draw();
@@ -1394,7 +1394,6 @@ if (isset($_SESSION['user'])) {
         })
 
         function getDataChart() {
-            console.log("oke <?= $user['id'] ?>");
             $.ajax({
                 url: 'users/scores.php',
                 type: 'GET',
