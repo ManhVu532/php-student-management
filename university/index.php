@@ -4,7 +4,10 @@ require_once("../utils/utils.php");
 session_start();
 $user = null;
 if (isset($_SESSION['user'])) {
-    $user = $_SESSION['user'];
+    $user = ($_SESSION['user']);
+    if($user){
+        $user = json_decode($user, true);
+    }
 }
 ?>
 
@@ -121,7 +124,7 @@ if (isset($_SESSION['user'])) {
                             <a class="nav-link text-white py-2 px-4  mx-1 rounded text-center" href="./pages/contact.html">Liên hệ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white py-2 px-4  mx-1 rounded text-center <?=($user == null) ? '' : "d-none"?>" href="<?= HOST . "pages/auth/login.php" ?>">Đăng nhập</a>
+                            <a class="nav-link text-white py-2 px-4  mx-1 rounded text-center" href="<?= HOST . "pages/auth/login.php" ?>"><?=($user == null) ?? 'Đăng nhập'?><?=$user['firstName'] ? 'Xin chào '.$user['firstName'] : ''?></a>
                         </li>
                     </ul>
                     <a class="search py-2 px-3 rounded" href="#">

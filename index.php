@@ -52,10 +52,11 @@ if (isset($_SESSION['user'])) {
             scroll-behavior: smooth;
         }
 
-        .nav-link:hover{
+        .nav-link:hover {
             background-color: rgba(0, 0, 0, 0.2);
         }
-        .nav-link{
+
+        .nav-link {
             min-width: 120px;
         }
     </style>
@@ -282,11 +283,11 @@ if (isset($_SESSION['user'])) {
                                                             <label for="dob">Ngày sinh</label>
                                                             <?php
                                                             $dob = '';
-                                                                if ($user['dob']) {
-                                                                    $date = $user['dob'];
-                                                                    $date_format = DateTime::createFromFormat("Y-m-d H:i:s",  $date);
-                                                                    $dob = $date_format->format("Y-m-d");
-                                                                }
+                                                            if ($user['dob']) {
+                                                                $date = $user['dob'];
+                                                                $date_format = DateTime::createFromFormat("Y-m-d H:i:s",  $date);
+                                                                $dob = $date_format->format("Y-m-d");
+                                                            }
                                                             ?>
                                                             <input type="date" class="form-control" id="dob" placeholder="Nhập ngày sinh" format="DD/MM/YYYY" value="<?= $dob ?>">
                                                         </div>
@@ -464,8 +465,26 @@ if (isset($_SESSION['user'])) {
                     </tfoot>
                 </table>
             </div>
-            <div class="chart-core">
+            <div class="chart-core card-body">
+                <!-- STACKED BAR CHART -->
+                <div class="card card-danger">
+                    <div class="card-header">
+                        <h3 class="card-title">Biểu đồ điểm qua các kỳ học</h3>
 
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart">
+                            <canvas id="stackedBarChart" style="min-height: 480px; height: 480px; max-height: 480px; max-width: 100%;"></canvas>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
             </div>
         </section>
 
@@ -1296,7 +1315,7 @@ if (isset($_SESSION['user'])) {
             let gender = $('#gender').val();
             let id = "<?= $user['id'] ?>";
 
-            if(!id || !firstName || !lastName || firstName.length == 0  || lastName.length == 0){
+            if (!id || !firstName || !lastName || firstName.length == 0 || lastName.length == 0) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Thông báo',
@@ -1350,11 +1369,14 @@ if (isset($_SESSION['user'])) {
                                 success: function(data) {
                                     if (data.status == 'success') {
                                         Swal.fire({
-                                            title: 'Thành công',
-                                            text: data.message,
-                                            icon: 'success',
-                                            confirmButtonText: 'OK'
-                                        });
+                                                title: 'Thành công',
+                                                text: data.message,
+                                                icon: 'success',
+                                                confirmButtonText: 'OK'
+                                            })
+                                            .then(() => {
+                                                location.reload();
+                                            })
                                     } else {
                                         Swal.fire({
                                             title: 'Thất bại',
@@ -1370,6 +1392,75 @@ if (isset($_SESSION['user'])) {
                 }
             })
         })
+
+        function getDataChart() {
+            console.log("oke <?= $user['id'] ?>");
+            $.ajax({
+                url: 'users/scores.php',
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    userId: '<?= $user['id'] ?>'
+                },
+                success: function(res) {
+                    let data = {
+                        labels: [],
+                        datasets: [{
+                            label: 'Điểm tổng kết',
+                            backgroundColor: '#396EB0',
+                            borderColor: '#000',
+                            data: []
+                        }],
+                    }
+                    if (res.status == 'success') {
+                        let scores = res.data;
+                        data.datasets[0].data = scores.avg;
+                        data.labels = scores.semesters.map(semester => {
+                            return semester.id;
+                        });
+                        drawChart(data);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi tải dữ liệu cho biểu đồ',
+                            text: res.message,
+                        });
+                    }
+                }
+            });
+        }
+
+        $().ready(function() {
+            console.log("abc");
+            getDataChart();
+        });
+
+        function drawChart(data) {
+            //---------------------
+            //- STACKED BAR CHART -
+            //---------------------
+            var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+            var stackedBarChartData = $.extend(true, {}, data)
+
+            var stackedBarChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        barPercentage: 0.4
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }], 
+                }
+            }
+
+            new Chart(stackedBarChartCanvas, {
+                type: 'bar',
+                data: stackedBarChartData,
+                options: stackedBarChartOptions
+            })
+        }
     </script>
 </body>
 

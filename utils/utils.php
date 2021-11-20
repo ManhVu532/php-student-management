@@ -66,4 +66,28 @@ function calc($final){
         return 'A+';
     }
 }
+ function calcGpa($final){
+    if(empty($final)){
+        return '';
+    }
+    if($final < 4 || $final == 'F'){
+        return 0;
+    }else if($final < 5 || $final == 'D'){
+        return 1;
+    }else if($final < 5.5 || $final == 'D+'){
+        return 1.5;
+    }else if($final < 6.5 || $final == 'C'){   
+        return 2;
+    }else if($final < 7 || $final == 'C+'){
+        return 2.5;
+    }else if($final < 8 || $final == 'B'){
+        return 3;
+    }else if($final < 8.5 || $final == 'B+'){
+        return 3.5;
+    }else if($final < 9 || $final == 'A'){
+        return 3.7;
+    }else{
+        return 4;
+    }
+ }
 ?>
