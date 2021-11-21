@@ -60,7 +60,7 @@ if (isset($_SESSION['user'])) {
                     <div class="wrap d-md-flex">
                         <div class="text-wrap p-4 p-lg-5 text-center d-flex align-items-center order-md-last">
                             <div class="text w-100">
-                                <h2>Chào mừng đến với PTIT</h2>
+                                <h1 class="text-white text-bold" style="font-weight: bold;">Chào mừng đến với PTIT</h1>
                             </div>
                         </div>
                         <div class="login-wrap p-4 p-lg-5">
