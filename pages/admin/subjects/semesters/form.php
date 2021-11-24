@@ -122,7 +122,7 @@ if (isset($_GET['id'])) {
                                             <label for="semester">Chọn học kỳ*</label>
                                             <select id="semester" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-secondary" title="Chọn học kỳ..." <?= $u_semesterId ? "disabled" : "" ?>>
                                                 <?php
-                                                $sql = "SELECT * FROM semester_tbl ORDER BY createAt DESC;";
+                                                $sql = "SELECT * FROM semester_tbl AS s ORDER BY s.startYear DESC, s.type DESC;";
                                                 $list = executeResult($sql);
                                                 if (count($list) > 0) {
                                                     foreach ($list as $item) {
@@ -146,7 +146,7 @@ if (isset($_GET['id'])) {
                                             <label for="subject">Chọn môn học*</label>
                                             <select id="subject" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-secondary" title="Chọn môn học..." <?= $u_semesterId ? "disabled" : "" ?>>
                                                 <?php
-                                                $sql = "SELECT * FROM subject_tbl ORDER BY createAt DESC;";
+                                                $sql = "SELECT * FROM subject_tbl AS s ORDER BY s.name;";
                                                 $list = executeResult($sql);
                                                 if (count($list) > 0) {
                                                     foreach ($list as $item) {
