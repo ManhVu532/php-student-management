@@ -130,7 +130,7 @@ if (isset($_GET['id']) && isset($_GET['subjectSemesterId'])) {
                                                 <?php
                                                 $sql = "SELECT ss.semesterId, ss.subjectId, s.name AS subjectName, ss.id FROM subject_semester AS ss, subject_tbl AS s
                                                 WHERE ss.subjectId = s.id
-                                                ORDER BY ss.createAt DESC;";
+                                                ORDER BY ss.semesterId DESC, ss.subjectId DESC, ss.id;";
                                                 $list = executeResult($sql);
                                                 if (count($list) > 0) {
                                                     foreach ($list as $item) {
@@ -156,7 +156,7 @@ if (isset($_GET['id']) && isset($_GET['subjectSemesterId'])) {
                                             <label for="student">Chọn sinh viên*</label>
                                             <select id="student" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-secondary" title="Chọn sinh viên..." <?= $u_id ? "disabled" : "" ?>>
                                                 <?php
-                                                $sql = "SELECT * FROM user_tbl ORDER BY createAt DESC;";
+                                                $sql = "SELECT * FROM user_tbl WHERE type != 1 ORDER BY id, firstName;";
                                                 $list = executeResult($sql);
 
                                                 if (count($list) > 0) {

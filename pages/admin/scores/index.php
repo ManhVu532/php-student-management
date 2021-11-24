@@ -100,13 +100,13 @@ $pathSidebar = 'scores';
                                                 </a>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <label for="subject-semester">Chọn học phần</label>
                                             <select id="subject-semester" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-info" title="Chọn học phần...">
                                                 <?php
                                                 $sql = "SELECT ss.semesterId, ss.subjectId, s.name AS subjectName, ss.id FROM subject_semester AS ss, subject_tbl AS s
                                                 WHERE ss.subjectId = s.id
-                                                ORDER BY ss.createAt DESC;";
+                                                ORDER BY ss.semesterId DESC, ss.subjectId DESC, ss.id;";
                                                 $isSelected = false;
                                                 $list = executeResult($sql);
                                                 if (count($list) > 0) {
