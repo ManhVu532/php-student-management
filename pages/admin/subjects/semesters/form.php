@@ -120,7 +120,7 @@ if (isset($_GET['id'])) {
                                     <div class="card-body row">
                                         <div class="form-group col-lg-6 col-sm-12">
                                             <label for="semester">Chọn học kỳ*</label>
-                                            <select id="semester" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-secondary" title="Chọn học kỳ..." <?= $u_semesterId ? "disabled" : "" ?>>
+                                            <select id="semester" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-danger" title="Chọn học kỳ..." <?= $u_semesterId ? "disabled" : "" ?>>
                                                 <?php
                                                 $sql = "SELECT * FROM semester_tbl AS s ORDER BY s.startYear DESC, s.type DESC;";
                                                 $list = executeResult($sql);
@@ -144,7 +144,7 @@ if (isset($_GET['id'])) {
                                         </div>
                                         <div class="form-group col-lg-6 col-sm-12">
                                             <label for="subject">Chọn môn học*</label>
-                                            <select id="subject" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-secondary" title="Chọn môn học..." <?= $u_semesterId ? "disabled" : "" ?>>
+                                            <select id="subject" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-danger" title="Chọn môn học..." <?= $u_semesterId ? "disabled" : "" ?>>
                                                 <?php
                                                 $sql = "SELECT * FROM subject_tbl AS s ORDER BY s.name;";
                                                 $list = executeResult($sql);
@@ -176,7 +176,7 @@ if (isset($_GET['id'])) {
                                         </div>
                                         <div class="form-group col-lg-6 col-sm-12">
                                             <label for="dayOfWeek">Thứ*</label>
-                                            <select id="dayOfWeek" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-style="btn-secondary" title="Chọn ngày học trong tuần">
+                                            <select id="dayOfWeek" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-style="btn-danger" title="Chọn ngày học trong tuần">
                                                 <option value="2" <?= $u_dayOfWeek == "2" ? "selected='selected'" : "" ?>>Thứ 2</option>
                                                 <option value="3" <?= $u_dayOfWeek == "3" ? "selected='selected'" : "" ?>>Thứ 3</option>
                                                 <option value="4" <?= $u_dayOfWeek == "4" ? "selected='selected'" : "" ?>>Thứ 4</option>

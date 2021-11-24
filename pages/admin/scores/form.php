@@ -126,7 +126,7 @@ if (isset($_GET['id']) && isset($_GET['subjectSemesterId'])) {
                                     <div class="card-body row">
                                         <div class="form-group col-lg-6 col-sm-12">
                                             <label for="subject-semester">Chọn học phần*</label>
-                                            <select id="subject-semester" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-secondary" title="Chọn học phần..." <?= $u_subjectSemesterId ? "disabled" : "" ?>>
+                                            <select id="subject-semester" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-danger" title="Chọn học phần..." <?= $u_subjectSemesterId ? "disabled" : "" ?>>
                                                 <?php
                                                 $sql = "SELECT ss.semesterId, ss.subjectId, s.name AS subjectName, ss.id FROM subject_semester AS ss, subject_tbl AS s
                                                 WHERE ss.subjectId = s.id
@@ -154,7 +154,7 @@ if (isset($_GET['id']) && isset($_GET['subjectSemesterId'])) {
                                         </div>
                                         <div class="form-group col-lg-6 col-sm-12">
                                             <label for="student">Chọn sinh viên*</label>
-                                            <select id="student" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-secondary" title="Chọn sinh viên..." <?= $u_id ? "disabled" : "" ?>>
+                                            <select id="student" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-danger" title="Chọn sinh viên..." <?= $u_id ? "disabled" : "" ?>>
                                                 <?php
                                                 $sql = "SELECT * FROM user_tbl WHERE type != 1 ORDER BY id, firstName;";
                                                 $list = executeResult($sql);
