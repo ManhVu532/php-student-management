@@ -98,7 +98,7 @@ $pathSidebar = 'schedules';
                                             <label class="mt-2">Chọn học kỳ:</label>
                                             <select id="semester" class="selectpicker w-100 mb-2 elevation-1 rounded-lg" data-live-search="true" data-style="btn-info">
                                                 <?php
-                                                $sql = "SELECT * FROM semester_tbl ORDER BY createAt DESC;";
+                                                $sql = "SELECT * FROM semester_tbl AS s ORDER BY s.startYear DESC, s.type DESC;";
                                                 $list = executeResult($sql);
                                                 $isSelected = false;
                                                 if (count($list) > 0) {
