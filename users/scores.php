@@ -16,7 +16,7 @@
             WHERE ss.semesterId = s.id
             AND rs.subjectSemesterId = ss.id
             AND rs.userId = '" . $id . "'
-            ORDER BY s.id;";
+            ORDER BY s.startYear, s.type;";
 
         $semesters = executeResult($sql);
         $avg = [];

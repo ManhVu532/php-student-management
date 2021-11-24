@@ -376,7 +376,7 @@ if (isset($_SESSION['user'])) {
                             WHERE ss.semesterId = s.id
                             AND rs.subjectSemesterId = ss.id
                             AND rs.userId = '" . $user['id'] . "'
-                            ORDER BY s.type;";
+                            ORDER BY s.startYear DESC, s.type DESC;";
                             $isSelected = false;
                             $list = executeResult($sql);
                             if (count($list) > 0) {
@@ -507,7 +507,7 @@ if (isset($_SESSION['user'])) {
                             WHERE ss.semesterId = s.id
                             AND rs.subjectSemesterId = ss.id
                             AND rs.userId = '" . $user['id'] . "'
-                            ORDER BY s.type;";
+                            ORDER BY s.startYear DESC, s.type DESC;";
                                 $isSelected = false;
                                 $list = executeResult($sql);
                                 if (count($list) > 0) {
@@ -619,7 +619,7 @@ if (isset($_SESSION['user'])) {
                                     WHERE ss.semesterId = s.id
                                     AND rs.subjectSemesterId = ss.id
                                     AND rs.userId = '" . $user['id'] . "'
-                                    ORDER BY s.type;";
+                                    ORDER BY s.startYear DESC, s.type DESC;";
                                 $isSelected = false;
                                 $list = executeResult($sql);
                                 if (count($list) > 0) {
@@ -1413,7 +1413,7 @@ if (isset($_SESSION['user'])) {
                     }
                     if (res.status == 'success') {
                         let scores = res.data;
-                        data.datasets[0].data = scores.avg;
+                        data.datasets[0].data = scores.avg.map(score => score.toFixed(2));
                         data.labels = scores.semesters.map(semester => {
                             return semester.id;
                         });
