@@ -39,7 +39,7 @@ function calcFinal($pointCC, $pointBT, $pointTH, $pointKT, $pointExam){
     $pointKT = (float) $pointKT;
     $pointExam = (float) $pointExam;
     $final = ($pointCC + $pointBT + $pointTH + $pointKT + $pointExam*6) / 10;
-    return $final;
+    return number_format($final, 2, '.', '');
 }
 
 function calc($final){

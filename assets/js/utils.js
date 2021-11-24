@@ -9,6 +9,8 @@ function calcFinal(a, b, c, d, e) {
     } else {
         let final = 0;
         final = (a + b + c + d + e * 6) / 10;
+        final = final.toFixed(2);
+        final = parseFloat(final);
         return final;
     }
 }
