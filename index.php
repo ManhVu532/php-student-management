@@ -1430,7 +1430,6 @@ if (isset($_SESSION['user'])) {
         }
 
         $().ready(function() {
-            console.log("abc");
             getDataChart();
         });
 
