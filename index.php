@@ -746,6 +746,7 @@ if (isset($_SESSION['user'])) {
     <script src="plugins/bootstrap-select-1.13.14/dist/js/bootstrap-select.min.js"></script>
     <script src="plugins/bootstrap-select-1.13.14/dist/js/i18n/defaults-vi_VN.min.js"></script>
     <script src="plugins/moment/moment.min.js"></script>
+    <script src="plugins/accounting/accounting.min.js"></script>
 
     <!-- ChartJS -->
     <script src="plugins/chart.js/Chart.min.js"></script>
@@ -1059,7 +1060,7 @@ if (isset($_SESSION['user'])) {
                                 item.subjectId,
                                 item.subjectName,
                                 item.numberOfCredits,
-                                item.fee
+                                accounting.formatNumber(item.fee)
                             ]).draw();
                         });
 
