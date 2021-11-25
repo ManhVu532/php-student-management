@@ -63,7 +63,7 @@ if (!isset($pathSidebar)) $pathSidebar = 'dashboard';
           </a>
         </li>
         <li class="nav-item">
-          <a href="<?= HOST . "pages/admin/subjects/index.php" ?>" class="nav-link <?= str_contains($pathSidebar, 'subjects') ? "active" : "" ?>">
+          <a href="#" class="nav-link <?= str_contains($pathSidebar, 'subjects') ? "active" : "" ?>">
             <i class="nav-icon fas fa-book"></i>
             <p>
               Môn học
