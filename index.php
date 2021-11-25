@@ -712,7 +712,7 @@ if (isset($_SESSION['user'])) {
                             $amountPaid = $result[0]['amountPaid'];
                         }
                         ?>
-                        <li class="list-group-item">Tổng số tin chỉ: <span id="totalCredits"><?= $totalCredits ?></span></li>
+                        <li class="list-group-item">Tổng số tín chỉ: <span id="totalCredits"><?= $totalCredits ?></span></li>
                         <li class="list-group-item">Tổng số tiền học phí học kỳ: <span id="totalFee"><?= number_format($totalFee) ?></span> VNĐ</li>
                         <li class="list-group-item">Số tiền đã đóng: <span id="amountPaid"><?= number_format($amountPaid) ?></span> VNĐ</li>
                         <li class="list-group-item">Còn lại: <span id="remain"><?= number_format($totalFee - $amountPaid) ?></span> VNĐ</li>
