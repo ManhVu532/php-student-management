@@ -16,7 +16,7 @@ if (isset($_FILES['file'])) {
 
     if (in_array($fileActualExt, $allowed)) {
         if ($fileError === 0) {
-            if ($fileSize < 500000) { // 500000kb
+            if ($fileSize < 500000) { // 500000bytes
                 $fileNameNew = uniqid('', true) . "." . $fileActualExt;
                 $fileDestination = '../../../uploads/' . $fileNameNew;
                 $fileHostDes = 'uploads/' . $fileNameNew;
